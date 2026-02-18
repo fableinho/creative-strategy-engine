@@ -40,15 +40,14 @@ export function WizardSidebar({
       if (stepIndex <= currentStep) return;
 
       const supabase = createClient();
-      await supabase
-        .from("projects")
+      await (supabase
+        .from("projects") as any)
         .update({ metadata: { current_step: stepIndex } })
         .eq("id", projectId);
     },
     [projectId, currentStep]
   );
 
-  // Persist highest step reached on navigation
   useEffect(() => {
     const activeIndex = getStepIndexFromPathname(pathname, basePath);
     persistStep(activeIndex);
