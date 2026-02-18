@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 
 const anthropic = new Anthropic();
 
-// Mirrors FORMAT_TEMPLATES from format-card-grid.tsx — kept server-side to avoid client import
 const FORMAT_CATALOG = [
   { id: "story-origin", category: "Storytelling", name: "Origin Story", description: "How the product/idea came to be — the 'aha' moment", structure: "Setup → Inciting incident → Discovery → Resolution → CTA" },
   { id: "story-customer-journey", category: "Storytelling", name: "Customer Journey", description: "A real customer's path from struggle to success", structure: "Meet [name] → Their struggle → Finding you → The result → CTA" },
@@ -91,45 +90,53 @@ export async function POST(request: Request) {
   }
 
   // Verify project ownership
-  const { data: project } = await supabase
+  const { data: projectData } = await supabase
     .from("projects")
     .select("id, name, description")
     .eq("id", projectId)
     .eq("owner_id", user.id)
     .single();
 
+  const project = projectData as any;
+
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
   // Fetch hook
-  const { data: hook } = await supabase
+  const { data: hookData } = await supabase
     .from("hooks")
     .select("id, content, type, awareness_stage, messaging_angle_id")
     .eq("id", hookId)
     .single();
+
+  const hook = hookData as any;
 
   if (!hook) {
     return NextResponse.json({ error: "Hook not found" }, { status: 404 });
   }
 
   // Fetch the messaging angle for context
-  const { data: angle } = await supabase
+  const { data: angleData } = await supabase
     .from("messaging_angles")
     .select("title, description, tone, pain_desire_id, audience_id, lenses")
     .eq("id", hook.messaging_angle_id)
     .single();
+
+  const angle = angleData as any;
 
   // Build context
   let painDesireContext = "";
   let audienceContext = "";
 
   if (angle?.pain_desire_id) {
-    const { data: pd } = await supabase
+    const { data: pdData } = await supabase
       .from("pain_desires")
       .select("type, title, description, intensity")
       .eq("id", angle.pain_desire_id)
       .single();
+
+    const pd = pdData as any;
 
     if (pd) {
       painDesireContext = `${pd.type.toUpperCase()}: "${pd.title}"${pd.description ? ` — ${pd.description}` : ""} (intensity: ${pd.intensity}/10)`;
@@ -137,11 +144,13 @@ export async function POST(request: Request) {
   }
 
   if (angle?.audience_id) {
-    const { data: aud } = await supabase
+    const { data: audData } = await supabase
       .from("audiences")
       .select("name, description")
       .eq("id", angle.audience_id)
       .single();
+
+    const aud = audData as any;
 
     if (aud) {
       audienceContext = `"${aud.name}"${aud.description ? ` — ${aud.description}` : ""}`;
@@ -197,7 +206,6 @@ export async function POST(request: Request) {
 
     const result = JSON.parse(textBlock.text);
 
-    // Validate and filter to only known format IDs
     const recommendations = (result.recommendations ?? [])
       .filter(
         (r: { format_id: string }) => VALID_FORMAT_IDS.has(r.format_id)
