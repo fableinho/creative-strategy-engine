@@ -102,9 +102,9 @@ export function AngleLenses({ angleId, projectId, lenses }: AngleLensesProps) {
     );
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from("messaging_angles")
-      .update({ lenses: cleaned } as any)
+    const { error } = await (supabase
+      .from("messaging_angles") as any)
+      .update({ lenses: cleaned })
       .eq("id", angleId);
 
     if (!error) {
