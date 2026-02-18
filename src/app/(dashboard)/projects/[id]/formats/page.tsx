@@ -117,7 +117,7 @@ export default function FormatsPage() {
 
     const { data, error } = await supabase
       .from("format_executions")
-      .insert(rows)
+      .insert(rows as any)
       .select();
 
     if (!error && data) {
