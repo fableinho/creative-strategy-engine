@@ -79,23 +79,27 @@ export async function POST(request: Request) {
   }
 
   // Verify project ownership
-  const { data: project } = await supabase
+  const { data: projectData } = await supabase
     .from("projects")
     .select("id, name, description")
     .eq("id", projectId)
     .eq("owner_id", user.id)
     .single();
 
+  const project = projectData as any;
+
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
   // Fetch the messaging angle
-  const { data: angle } = await supabase
+  const { data: angleData } = await supabase
     .from("messaging_angles")
     .select("title, description, tone, pain_desire_id, audience_id, lenses")
     .eq("id", angleId)
     .single();
+
+  const angle = angleData as any;
 
   if (!angle) {
     return NextResponse.json({ error: "Angle not found" }, { status: 404 });
@@ -106,11 +110,13 @@ export async function POST(request: Request) {
   let audienceContext = "";
 
   if (angle.pain_desire_id) {
-    const { data: pd } = await supabase
+    const { data: pdData } = await supabase
       .from("pain_desires")
       .select("type, title, description, intensity")
       .eq("id", angle.pain_desire_id)
       .single();
+
+    const pd = pdData as any;
 
     if (pd) {
       painDesireContext = `${pd.type.toUpperCase()}: "${pd.title}"${pd.description ? ` — ${pd.description}` : ""} (intensity: ${pd.intensity}/10)`;
@@ -118,11 +124,13 @@ export async function POST(request: Request) {
   }
 
   if (angle.audience_id) {
-    const { data: aud } = await supabase
+    const { data: audData } = await supabase
       .from("audiences")
       .select("name, description")
       .eq("id", angle.audience_id)
       .single();
+
+    const aud = audData as any;
 
     if (aud) {
       audienceContext = `"${aud.name}"${aud.description ? ` — ${aud.description}` : ""}`;
@@ -136,7 +144,7 @@ export async function POST(request: Request) {
     .eq("messaging_angle_id", angleId);
 
   const existingContext = existingHooks?.length
-    ? `\n\nEXISTING HOOKS (generate different ones):\n${existingHooks.map((h) => `- "${h.content}"`).join("\n")}`
+    ? `\n\nEXISTING HOOKS (generate different ones):\n${(existingHooks as any[]).map((h) => `- "${h.content}"`).join("\n")}`
     : "";
 
   // Build lens context
