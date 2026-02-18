@@ -60,7 +60,7 @@ export default function AnglesPage() {
         description: newDesc.trim() || null,
         tone: newTone.trim() || null,
         sort_order: messagingAngles.length,
-      })
+      } as any)
       .select()
       .single();
 
