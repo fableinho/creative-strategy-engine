@@ -111,7 +111,7 @@ export default function PainDesiresPage() {
 
     const { data, error } = await supabase
       .from("pain_desires")
-      .insert(rows)
+      .insert(rows as any)
       .select();
 
     if (!error && data) {
@@ -148,7 +148,7 @@ export default function PainDesiresPage() {
 
     const { data, error } = await supabase
       .from("audiences")
-      .insert(rows)
+      .insert(rows as any)
       .select();
 
     if (!error && data) {
