@@ -47,28 +47,34 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: project } = await supabase
+  const { data: projectData } = await supabase
     .from("projects")
     .select("id, name, description")
     .eq("id", projectId)
     .eq("owner_id", user.id)
     .single();
 
+  const project = projectData as any;
+
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  const { data: painDesire } = await supabase
+  const { data: painDesireData } = await supabase
     .from("pain_desires")
     .select("type, title, description, intensity")
     .eq("id", painDesireId)
     .single();
 
-  const { data: audience } = await supabase
+  const painDesire = painDesireData as any;
+
+  const { data: audienceData } = await supabase
     .from("audiences")
     .select("name, description")
     .eq("id", audienceId)
     .single();
+
+  const audience = audienceData as any;
 
   if (!painDesire || !audience) {
     return NextResponse.json(
