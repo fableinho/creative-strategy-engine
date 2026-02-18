@@ -100,8 +100,6 @@ function getStageForHook(hook: Hook): AwarenessStage {
   return (hook.awareness_stage as AwarenessStage) ?? "unaware";
 }
 
-// --- Inline Hook Input ---
-
 interface InlineHookInputProps {
   angleId: string;
   stage: AwarenessStage;
@@ -138,7 +136,7 @@ function InlineHookInput({
         content: content.trim(),
         awareness_stage: stage,
         sort_order: stageHookCount,
-      })
+      } as any)
       .select()
       .single();
 
@@ -146,7 +144,6 @@ function InlineHookInput({
       addHook(data);
       setContent("");
       setHookType("question");
-      // Keep the input open for rapid entry
     }
     setSaving(false);
   }
@@ -202,8 +199,6 @@ function InlineHookInput({
     </div>
   );
 }
-
-// --- Hook Card (draggable) ---
 
 interface DraggableHookCardProps {
   hook: Hook;
@@ -283,7 +278,6 @@ function DraggableHookCard({
         </div>
         <p className="text-xs text-gray-900 leading-relaxed">{hook.content}</p>
 
-        {/* Lens snippets */}
         {lensSnippets.length > 0 && (
           <div className="mt-2 space-y-1">
             {lensSnippets.map((lens) => (
@@ -314,7 +308,6 @@ function DraggableHookCard({
         </div>
       </div>
 
-      {/* Inline input for adding sibling hook (same angle, same stage) */}
       {isInlineOpen && (
         <InlineHookInput
           angleId={hook.messaging_angle_id}
@@ -326,8 +319,6 @@ function DraggableHookCard({
     </div>
   );
 }
-
-// --- Static card for overlay ---
 
 function HookCardOverlay({
   hook,
@@ -351,8 +342,6 @@ function HookCardOverlay({
   );
 }
 
-// --- Board ---
-
 interface HooksBoardProps {
   projectId: string;
   onAddHook: (stage: AwarenessStage) => void;
@@ -374,9 +363,7 @@ export function HooksBoard({ projectId, onAddHook }: HooksBoardProps) {
     return messagingAngles.find((a) => a.id === angleId)?.title ?? "Unknown";
   }
 
-  function getLensSnippets(
-    angleId: string
-  ): { key: string; value: string }[] {
+  function getLensSnippets(angleId: string): { key: string; value: string }[] {
     const angle = messagingAngles.find((a) => a.id === angleId);
     if (!angle) return [];
     const lenses = (angle.lenses as Lenses) ?? {};
@@ -396,24 +383,22 @@ export function HooksBoard({ projectId, onAddHook }: HooksBoardProps) {
   }
 
   async function handleToggleStar(hookId: string, starred: boolean) {
-    // Optimistic update
     updateHook(hookId, { is_starred: starred });
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from("hooks")
+    const { error } = await (supabase
+      .from("hooks") as any)
       .update({ is_starred: starred })
       .eq("id", hookId);
 
     if (error) {
-      // Rollback
       updateHook(hookId, { is_starred: !starred });
     }
   }
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(event.active.id as string);
-    setInlineOpenId(null); // Close any open inline input when dragging
+    setInlineOpenId(null);
   }
 
   async function handleDragEnd(event: DragEndEvent) {
@@ -426,18 +411,14 @@ export function HooksBoard({ projectId, onAddHook }: HooksBoardProps) {
     const hook = hooks.find((h) => h.id === hookId);
     if (!hook) return;
 
-    // Determine target stage
-    // "over" could be a hook id or a stage droppable id
     let targetStageKey: AwarenessStage | null = null;
 
-    // Check if dropped over a stage column
     const stageMatch = AWARENESS_STAGES.find(
       (s) => s.key === (over.id as string)
     );
     if (stageMatch) {
       targetStageKey = stageMatch.key;
     } else {
-      // Dropped over another hook — find which stage that hook is in
       const overHook = hooks.find((h) => h.id === over.id);
       if (overHook) {
         targetStageKey = getStageForHook(overHook);
@@ -449,23 +430,20 @@ export function HooksBoard({ projectId, onAddHook }: HooksBoardProps) {
     const currentStage = getStageForHook(hook);
     if (currentStage === targetStageKey) return;
 
-    // Calculate new sort_order within the target stage
     const stageHooks = hooks.filter(
       (h) => h.id !== hookId && getStageForHook(h) === targetStageKey
     );
     const newSortOrder = stageHooks.length;
 
-    // Optimistic update
     updateHook(hookId, { awareness_stage: targetStageKey, sort_order: newSortOrder });
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from("hooks")
+    const { error } = await (supabase
+      .from("hooks") as any)
       .update({ awareness_stage: targetStageKey, sort_order: newSortOrder })
       .eq("id", hookId);
 
     if (error) {
-      // Rollback
       updateHook(hookId, { awareness_stage: currentStage, sort_order: hook.sort_order });
     }
   }
@@ -507,8 +485,6 @@ export function HooksBoard({ projectId, onAddHook }: HooksBoardProps) {
   );
 }
 
-// --- Stage Column (droppable) ---
-
 interface StageColumnProps {
   stage: (typeof AWARENESS_STAGES)[number];
   hooks: Hook[];
@@ -540,7 +516,6 @@ function StageColumn({
       ref={setNodeRef}
       className={`flex-shrink-0 w-64 rounded-lg border ${stage.color} flex flex-col`}
     >
-      {/* Column header */}
       <div className="px-3 py-3 border-b border-inherit">
         <div className="flex items-center justify-between mb-0.5">
           <h3 className={`text-sm font-semibold ${stage.headerColor}`}>
@@ -553,7 +528,6 @@ function StageColumn({
         <p className="text-[10px] text-gray-400">{stage.description}</p>
       </div>
 
-      {/* Cards */}
       <SortableContext
         items={hooks.map((h) => h.id)}
         strategy={verticalListSortingStrategy}
@@ -580,7 +554,6 @@ function StageColumn({
         </div>
       </SortableContext>
 
-      {/* Add button — opens full dialog */}
       <div className="p-2 border-t border-inherit">
         <button
           onClick={() => onAddHook(stage.key)}
