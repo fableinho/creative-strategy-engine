@@ -34,7 +34,6 @@ export function PainDesireAudienceMatrix({ projectId }: MatrixProps) {
     const supabase = createClient();
 
     if (existing) {
-      // Optimistic remove
       removeLink(existing.id);
 
       const { error } = await supabase
@@ -46,14 +45,13 @@ export function PainDesireAudienceMatrix({ projectId }: MatrixProps) {
         addLink(existing);
       }
     } else {
-      // Create link — need server ID
       const { data, error } = await supabase
         .from("pain_desire_audiences")
         .insert({
           pain_desire_id: painDesireId,
           audience_id: audienceId,
           sort_order: links.length,
-        })
+        } as any)
         .select()
         .single();
 
