@@ -74,13 +74,12 @@ export function AiAngleSuggestions({
         tone: candidate.tone,
         is_ai_generated: true,
         sort_order: messagingAngles.length,
-      })
+      } as any)
       .select()
       .single();
 
     if (!error && data) {
       addMessagingAngle(data);
-      // Find and dismiss the candidate
       const idx = candidates.findIndex(
         (c) => c.title === candidate.title && c.description === candidate.description
       );
@@ -116,7 +115,7 @@ export function AiAngleSuggestions({
         is_ai_generated: true,
         is_edited: true,
         sort_order: messagingAngles.length,
-      })
+      } as any)
       .select()
       .single();
 
@@ -130,7 +129,6 @@ export function AiAngleSuggestions({
 
   const visibleCandidates = candidates.filter((_, i) => !dismissed.has(i));
 
-  // No candidates yet — show generate button
   if (candidates.length === 0 || visibleCandidates.length === 0) {
     return (
       <button
