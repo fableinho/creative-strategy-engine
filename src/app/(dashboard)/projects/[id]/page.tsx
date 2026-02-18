@@ -16,12 +16,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   if (!user) redirect("/login");
 
-  const { data: project, error } = await supabase
+  const { data: projectData, error } = await supabase
     .from("projects")
     .select("id, name, description, status, organizing_principle, metadata")
     .eq("id", id)
     .eq("owner_id", user.id)
     .single();
+
+  const project = projectData as any;
 
   if (error || !project) notFound();
 
@@ -29,7 +31,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     organizing_approach?: string;
   } | null;
 
-  // Show approach selector if not yet chosen
   if (!metadata?.organizing_approach) {
     return (
       <OrganizingPrincipleSelector
