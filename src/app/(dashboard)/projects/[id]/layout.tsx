@@ -21,7 +21,7 @@ export default async function ProjectLayout({
 
   if (!user) redirect("/login");
 
-  const { data: project, error } = await supabase
+  const { data: projectData, error } = await supabase
     .from("projects")
     .select("id, name, metadata")
     .eq("id", id)
