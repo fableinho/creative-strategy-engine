@@ -31,7 +31,7 @@ export default async function ProjectLayout({
   if (error || !project) notFound();
 
   const currentStep =
-    (project.metadata as { current_step?: number } | null)?.current_step ?? 0;
+    ((project as any).metadata as { current_step?: number } | null)?.current_step ?? 0;
 
   return (
     <div className="flex h-[calc(100vh-3.5rem)]">
