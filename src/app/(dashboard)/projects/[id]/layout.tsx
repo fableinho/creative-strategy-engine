@@ -28,10 +28,12 @@ export default async function ProjectLayout({
     .eq("owner_id", user.id)
     .single();
 
+  const project = projectData as any;
+
   if (error || !project) notFound();
 
   const currentStep =
-    ((project as any).metadata as { current_step?: number } | null)?.current_step ?? 0;
+    (project.metadata as { current_step?: number } | null)?.current_step ?? 0;
 
   return (
     <div className="flex h-[calc(100vh-3.5rem)]">
