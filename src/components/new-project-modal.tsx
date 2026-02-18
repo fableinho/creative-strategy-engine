@@ -38,7 +38,6 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Form state
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedClientId, setSelectedClientId] = useState("");
@@ -70,7 +69,6 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
 
       let clientId = selectedClientId;
 
-      // Create new client if needed
       if (showNewClient) {
         if (!newClientName.trim()) {
           setError("Client name is required");
@@ -78,13 +76,14 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
           return;
         }
 
-        const { data: newClient, error: clientError } = await supabase
+        const { data: newClientData, error: clientError } = await supabase
           .from("clients")
-          .insert({ name: newClientName.trim(), owner_id: user.id })
+          .insert({ name: newClientName.trim(), owner_id: user.id } as any)
           .select("id")
           .single();
 
         if (clientError) throw clientError;
+        const newClient = newClientData as any;
         clientId = newClient.id;
       }
 
@@ -94,19 +93,19 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
         return;
       }
 
-      // Create project
-      const { data: project, error: projectError } = await supabase
+      const { data: projectData, error: projectError } = await supabase
         .from("projects")
         .insert({
           name: name.trim(),
           description: description.trim() || null,
           client_id: clientId,
           owner_id: user.id,
-        })
+        } as any)
         .select("id")
         .single();
 
       if (projectError) throw projectError;
+      const project = projectData as any;
 
       setOpen(false);
       resetForm();
@@ -139,7 +138,6 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
             </div>
           )}
 
-          {/* Project Name */}
           <div className="space-y-2">
             <Label htmlFor="project-name">Project Name</Label>
             <Input
@@ -151,7 +149,6 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
             />
           </div>
 
-          {/* Client Selection */}
           <div className="space-y-2">
             <Label>Client</Label>
             {!showNewClient && clients.length > 0 ? (
@@ -202,7 +199,6 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
             )}
           </div>
 
-          {/* Product Description */}
           <div className="space-y-2">
             <Label htmlFor="description">Product / Service Description</Label>
             <Textarea
