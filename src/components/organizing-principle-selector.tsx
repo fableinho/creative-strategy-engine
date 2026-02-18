@@ -104,7 +104,6 @@ export function OrganizingPrincipleSelector({
     if (!selected) return;
     setLoading(true);
 
-    // Build rationale string
     let rationale: string | null = null;
     if (aiRecommendation) {
       const isOverride = selected !== aiRecommendation.recommendation;
@@ -116,8 +115,8 @@ export function OrganizingPrincipleSelector({
     }
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from("projects")
+    const { error } = await (supabase
+      .from("projects") as any)
       .update({
         organizing_principle: selected === "pain" ? "audience" : "product",
         principle_rationale: rationale,
@@ -173,18 +172,14 @@ export function OrganizingPrincipleSelector({
           const isAiRecommended =
             aiRecommendation?.recommendation === principle.key;
 
-          // Determine card styling
           let cardClass: string;
           if (isAiRecommended && isSelected) {
-            // AI recommended + user selected
             cardClass =
               "border-violet-500 bg-violet-50/60 border-dashed shadow-md shadow-violet-100";
           } else if (isAiRecommended && !isSelected) {
-            // AI recommended but user picked the other
             cardClass =
               "border-violet-300 bg-violet-50/30 border-dashed hover:border-violet-400";
           } else if (isSelected) {
-            // User selected (no AI or overriding AI)
             cardClass = principle.activeColor;
           } else {
             cardClass = principle.color;
