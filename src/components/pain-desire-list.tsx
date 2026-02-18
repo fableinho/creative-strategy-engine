@@ -161,7 +161,7 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
         description: newDesc.trim() || null,
         intensity: newIntensity,
         sort_order: painDesires.length,
-      })
+      } as any)
       .select()
       .single();
 
@@ -178,18 +178,16 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
     id: string,
     data: { title: string; description: string | null; intensity: number | null }
   ) {
-    // Optimistic update
     const previous = painDesires.find((pd) => pd.id === id);
     updatePainDesire(id, data);
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from("pain_desires")
+    const { error } = await (supabase
+      .from("pain_desires") as any)
       .update(data)
       .eq("id", id);
 
     if (error && previous) {
-      // Rollback on failure
       updatePainDesire(id, {
         title: previous.title,
         description: previous.description,
@@ -199,7 +197,6 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
   }
 
   async function handleDelete(id: string) {
-    // Optimistic delete
     const previous = painDesires.find((pd) => pd.id === id);
     removePainDesire(id);
 
@@ -210,7 +207,6 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
       .eq("id", id);
 
     if (error && previous) {
-      // Rollback on failure
       addPainDesire(previous);
     }
   }
