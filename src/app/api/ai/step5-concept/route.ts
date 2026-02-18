@@ -234,7 +234,7 @@ export async function POST(request: Request) {
     // Save to DB
     const { error: updateError } = await supabase
       .from("format_executions")
-      .update({ concept_notes: conceptNotes })
+      .update({ concept_notes: conceptNotes } as any)
       .eq("id", formatExecutionId);
 
     if (updateError) {
