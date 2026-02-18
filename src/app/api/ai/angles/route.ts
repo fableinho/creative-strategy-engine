@@ -86,7 +86,7 @@ export async function POST(request: Request) {
     .eq("audience_id", audienceId);
 
   const existingContext = existingAngles?.length
-    ? `\n\nEXISTING ANGLES (generate different ones):\n${existingAngles.map((a) => `- ${a.title}`).join("\n")}`
+    ? `\n\nEXISTING ANGLES (generate different ones):\n${(existingAngles as any[]).map((a) => `- ${a.title}`).join("\n")}`
     : "";
 
   const userPrompt = [
