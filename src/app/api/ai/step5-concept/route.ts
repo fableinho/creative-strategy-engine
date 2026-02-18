@@ -232,9 +232,9 @@ export async function POST(request: Request) {
     const conceptNotes = result.concept_notes ?? "";
 
     // Save to DB
-    const { error: updateError } = await supabase
-      .from("format_executions")
-      .update({ concept_notes: conceptNotes } as any)
+    const { error: updateError } = await (supabase
+      .from("format_executions") as any)
+      .update({ concept_notes: conceptNotes })
       .eq("id", formatExecutionId);
 
     if (updateError) {
