@@ -75,7 +75,7 @@ export default function HooksPage() {
         content: content.trim(),
         awareness_stage: targetStage,
         sort_order: stageHookCount,
-      })
+      } as any)
       .select()
       .single();
 
