@@ -39,8 +39,8 @@ export function ProjectActions({
     setLoading(true);
     const supabase = createClient();
 
-    const { error } = await supabase
-      .from("projects")
+    const { error } = await (supabase
+      .from("projects") as any)
       .update({ status: "archived" })
       .eq("id", projectId);
 
