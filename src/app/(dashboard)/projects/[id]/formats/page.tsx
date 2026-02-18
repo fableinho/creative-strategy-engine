@@ -85,7 +85,7 @@ export default function FormatsPage() {
           format: "social_post" as const,
           content: "",
           sort_order: sortOrder,
-        })
+        } as any)
         .select()
         .single();
 
