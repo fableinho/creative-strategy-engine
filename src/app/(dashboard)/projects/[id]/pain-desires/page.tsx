@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 interface PainDesireSuggestion {
   title: string;
   description: string;
-  intensity: number;
+  intensity?: number;
 }
 
 interface AudienceSuggestion {
