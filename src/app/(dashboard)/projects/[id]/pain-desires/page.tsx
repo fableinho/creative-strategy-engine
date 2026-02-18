@@ -86,7 +86,7 @@ export default function PainDesiresPage() {
         description: suggestion.description,
         intensity: suggestion.intensity,
         sort_order: painDesires.length,
-      })
+      } as any)
       .select()
       .single();
 
@@ -128,7 +128,7 @@ export default function PainDesiresPage() {
         name: suggestion.name,
         description: suggestion.description,
         sort_order: audiences.length,
-      })
+      } as any)
       .select()
       .single();
 
