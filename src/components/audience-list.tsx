@@ -121,7 +121,7 @@ export function AudienceList({ projectId }: AudienceListProps) {
         name: newName.trim(),
         description: newDesc.trim() || null,
         sort_order: audiences.length,
-      })
+      } as any)
       .select()
       .single();
 
@@ -137,13 +137,12 @@ export function AudienceList({ projectId }: AudienceListProps) {
     id: string,
     data: { name: string; description: string | null }
   ) {
-    // Optimistic update
     const previous = audiences.find((a) => a.id === id);
     updateAudience(id, data);
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from("audiences")
+    const { error } = await (supabase
+      .from("audiences") as any)
       .update(data)
       .eq("id", id);
 
@@ -156,7 +155,6 @@ export function AudienceList({ projectId }: AudienceListProps) {
   }
 
   async function handleDelete(id: string) {
-    // Optimistic delete
     const previous = audiences.find((a) => a.id === id);
     removeAudience(id);
 
