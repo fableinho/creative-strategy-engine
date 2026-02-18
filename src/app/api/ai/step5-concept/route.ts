@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 
 const anthropic = new Anthropic();
 
-const FORMAT_CATALOG: Record
+const FORMAT_CATALOG: Record<
   string,
   { name: string; category: string; description: string; structure: string }
 > = {
