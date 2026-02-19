@@ -195,7 +195,7 @@ export async function POST(request: Request) {
       throw new Error("No text response from AI");
     }
 
-    const result = JSON.parse(textBlock.text);
+    const cleaned = textBlock.text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim(); const result = JSON.parse(cleaned);
     const hooks: string[] = (result.hooks ?? []).map(
       (h: { content: string; type?: string }) => h.content
     );
