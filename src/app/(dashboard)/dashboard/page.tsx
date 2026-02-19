@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { NewProjectModal } from "@/components/new-project-modal";
 import { ProjectCard } from "@/components/project-card";
+import { NewClientProjectCard } from "@/components/new-client-project-card";
 
 interface ProjectWithClient {
   id: string;
@@ -177,34 +178,7 @@ export default async function DashboardPage() {
                   ))}
 
                   {/* New project card */}
-                  <NewProjectModal clients={clients}>
-                    <div
-                      style={{
-                        background: "var(--surface)",
-                        border: "1.5px dashed var(--cse-border)",
-                        borderRadius: 16,
-                        padding: 20,
-                        cursor: "pointer",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        gap: 8, minHeight: 130,
-                        color: "var(--ink-3)", fontSize: 13, fontWeight: 500,
-                        transition: "all .2s",
-                      }}
-                      onMouseOver={e => {
-                        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--cse-border-2)";
-                        (e.currentTarget as HTMLDivElement).style.background = "var(--surface-2)";
-                        (e.currentTarget as HTMLDivElement).style.color = "var(--ink-2)";
-                      }}
-                      onMouseOut={e => {
-                        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--cse-border)";
-                        (e.currentTarget as HTMLDivElement).style.background = "var(--surface)";
-                        (e.currentTarget as HTMLDivElement).style.color = "var(--ink-3)";
-                      }}
-                    >
-                      <span style={{ fontSize: 18 }}>+</span>
-                      New project for {client.name}
-                    </div>
-                  </NewProjectModal>
+                  <NewClientProjectCard clients={clients} clientName={client.name} />
                 </div>
               </section>
             );

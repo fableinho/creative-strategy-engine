@@ -158,6 +158,23 @@
   --shadow-lg: 0 12px 32px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.06);
 }
 
+/* ── Nav sign-out button ─────────────────────────────────── */
+.nav-signout-btn {
+  font-size: 13px;
+  color: var(--ink-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: inherit;
+  transition: background .15s, color .15s;
+}
+.nav-signout-btn:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
 /* ── Project card colored accent bar ─────────────────────── */
 .project-card-accent {
   position: relative;
@@ -174,6 +191,29 @@
 }
 .project-card-accent:hover::before {
   opacity: 1;
+}
+
+/* ── New client project card ─────────────────────────────── */
+.new-client-project-card {
+  background: var(--surface);
+  border: 1.5px dashed var(--cse-border);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 130px;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all .2s;
+}
+.new-client-project-card:hover {
+  border-color: var(--cse-border-2);
+  background: var(--surface-2);
+  color: var(--ink-2);
 }
 
 /* ── Segmented progress bar ──────────────────────────────── */

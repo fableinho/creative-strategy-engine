@@ -52,20 +52,7 @@ export default async function DashboardLayout({
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              style={{
-                fontSize: 13, color: "var(--ink-2)",
-                background: "none", border: "none", cursor: "pointer",
-                padding: "4px 8px", borderRadius: 6,
-                fontFamily: "inherit",
-              }}
-              onMouseOver={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = "var(--surface-2)";
-                (e.currentTarget as HTMLButtonElement).style.color = "var(--ink)";
-              }}
-              onMouseOut={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = "none";
-                (e.currentTarget as HTMLButtonElement).style.color = "var(--ink-2)";
-              }}
+              className="nav-signout-btn"
             >
               Sign out
             </button>
