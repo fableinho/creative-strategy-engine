@@ -144,44 +144,44 @@ Start here to get the foundation right:
 
 ## Step 2 – Pain/Audience Mapping
 
-- [ ] **S2-01** - Build two-column list UI: Pain Points/Desires (left) | Audiences (right)
+- [x] **S2-01** - Build two-column list UI: Pain Points/Desires (left) | Audiences (right)
   - Phase 1: list view (not canvas). Canvas in Phase 2.
 
-- [ ] **S2-02** - Implement add/edit/delete for pain_desires and audiences with inline forms
+- [x] **S2-02** - Implement add/edit/delete for pain_desires and audiences with inline forms
   - Optimistic UI updates, save to Supabase on blur/confirm
 
-- [ ] **S2-03** - Build connection UI: checkboxes or toggle to link pains ↔ audiences
+- [x] **S2-03** - Build connection UI: checkboxes or toggle to link pains ↔ audiences
   - Each checked combo creates a `pain_desire_audiences` row
 
-- [ ] **S2-04** - Create POST /api/ai/step2 route: suggest pains and audiences for product
+- [x] **S2-04** - Create POST /api/ai/step2 route: suggest pains and audiences for product
   - Return JSON: `{ pains: string[], audiences: string[] }`
 
-- [ ] **S2-05** - Render AI suggestions as dismissable chips below each column
+- [x] **S2-05** - Render AI suggestions as dismissable chips below each column
   - Click chip to add to list; accept/dismiss all buttons
 
-- [ ] **S2-06** - Show intersection count badge: 'X messaging angles unlocked'
+- [x] **S2-06** - Show intersection count badge: 'X messaging angles unlocked'
   - Compute from `pain_desire_audiences` row count
 
 ---
 
 ## Step 3 – Messaging Angles
 
-- [ ] **S3-01** - Build intersection card grid: one card per pain-audience connection
+- [x] **S3-01** - Build intersection card grid: one card per pain-audience connection
   - Card header shows pain name + audience name
 
-- [ ] **S3-02** - Render 10 lens fields inside each card as collapsible section
+- [x] **S3-02** - Render 10 lens fields inside each card as collapsible section
   - Lenses: desired_outcome, objections, features_benefits, use_case, consequences, misconceptions, education, acceptance, failed_solutions, identity
 
-- [ ] **S3-03** - Implement text inputs per lens with auto-save on blur
+- [x] **S3-03** - Implement text inputs per lens with auto-save on blur
   - Save to messaging_angles table with lens enum value
 
-- [ ] **S3-04** - Create POST /api/ai/step3 route: generate 2-3 angle candidates per lens
+- [x] **S3-04** - Create POST /api/ai/step3 route: generate 2-3 angle candidates per lens
   - Input: full project context + intersection + lens. Output: `string[]`
 
-- [ ] **S3-05** - Build AI suggestion display: show candidates with Accept / Edit / Regenerate
+- [x] **S3-05** - Build AI suggestion display: show candidates with Accept / Edit / Regenerate
   - Accept → saves with `is_ai_generated=true`. Edit → opens inline editor.
 
-- [ ] **S3-06** - Add 'Fill All' button: batch-generate AI for all empty lens fields
+- [x] **S3-06** - Add 'Fill All' button: batch-generate AI for all empty lens fields
   - Show progress spinner; allow cancel. Queue requests, don't parallel flood.
 
 ---

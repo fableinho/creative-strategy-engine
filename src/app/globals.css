@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-instrument-serif);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -122,5 +123,86 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 14px;
+    line-height: 1.5;
   }
 }
+
+/* ── Design tokens (CSE reference UI) ───────────────────── */
+:root {
+  --ink:          #111110;
+  --ink-2:        #63635d;
+  --ink-3:        #a8a39a;
+  --surface:      #fafaf8;
+  --surface-2:    #f2f1ee;
+  --surface-3:    #e8e7e2;
+  --cse-white:    #ffffff;
+  --cse-border:   #e3e2dc;
+  --cse-border-2: #d4d3cc;
+
+  --amber:        #d97706;
+  --amber-bg:     #fef3c7;
+  --amber-border: #fcd34d;
+
+  --cse-red:        #dc2626;
+  --cse-red-bg:     #fef2f2;
+  --cse-red-border: #fecaca;
+
+  --cse-green:        #16a34a;
+  --cse-green-bg:     #f0fdf4;
+  --cse-green-border: #bbf7d0;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,.06);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.06);
+}
+
+/* ── Project card colored accent bar ─────────────────────── */
+.project-card-accent {
+  position: relative;
+  overflow: hidden;
+}
+.project-card-accent::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--client-color, #e8e7e2);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.project-card-accent:hover::before {
+  opacity: 1;
+}
+
+/* ── Segmented progress bar ──────────────────────────────── */
+.progress-bar-wrap {
+  display: flex;
+  gap: 4px;
+}
+.progress-bar-seg {
+  height: 4px;
+  border-radius: 2px;
+  flex: 1;
+  background: #e8e7e2;
+  transition: background .2s;
+}
+.progress-bar-seg.done  { background: #111110; }
+.progress-bar-seg.active { background: #111110; opacity: .4; }
+
+/* ── Choice card glow ────────────────────────────────────── */
+.choice-card-glow {
+  position: relative;
+  overflow: hidden;
+}
+.choice-card-glow::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 20%, var(--glow-color, transparent) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.choice-card-glow:hover::after { opacity: 1; }
+.choice-card-glow.selected::after { opacity: 1; }

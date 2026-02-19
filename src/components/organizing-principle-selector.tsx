@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useProjectStore } from "@/stores/project-store";
-import { Button } from "@/components/ui/button";
 
 interface AiRecommendation {
   recommendation: "pain" | "desire";
@@ -22,47 +20,45 @@ interface OrganizingPrincipleSelectorProps {
 const PRINCIPLES = [
   {
     key: "pain" as const,
-    title: "Pain-First",
-    subtitle: "Start with what hurts",
+    badge: "😣 Pain-First",
+    badgeStyle: {
+      background: "var(--cse-red-bg)",
+      color: "var(--cse-red)",
+      border: "1px solid var(--cse-red-border)",
+    },
+    title: "Start with what hurts",
+    subtitle: "Lead with the problem",
     description:
-      "Identify the frustrations, fears, and obstacles your audience faces. Build messaging that agitates the problem before presenting your solution.",
+      "People are actively searching for a solution to a specific, felt problem. They know something is wrong — they just need the fix.",
+    question: '"What problem are people Googling right now?"',
     examples: [
-      "\"Tired of wasting hours on manual reporting?\"",
-      "\"Stop losing customers to slow load times\"",
-      "\"The hidden cost of outdated software\"",
+      '"Tired of wasting hours on manual reporting?"',
+      '"Stop losing customers to slow load times"',
+      '"The hidden cost of outdated software"',
     ],
-    color: "border-red-200 hover:border-red-400",
-    activeColor: "border-red-500 bg-red-50/50",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Z" />
-        <path d="M8 15s1.5-2 4-2 4 2 4 2" />
-        <line x1="9" y1="9" x2="9.01" y2="9" />
-        <line x1="15" y1="9" x2="15.01" y2="9" />
-      </svg>
-    ),
+    glowColor: "rgba(220,38,38,.06)",
+    selectedClass: "selected-pain",
   },
   {
     key: "desire" as const,
-    title: "Desire-First",
-    subtitle: "Start with what they want",
+    badge: "🌟 Desire-First",
+    badgeStyle: {
+      background: "var(--cse-green-bg)",
+      color: "var(--cse-green)",
+      border: "1px solid var(--cse-green-border)",
+    },
+    title: "Start with what they want",
+    subtitle: "Lead with the vision",
     description:
-      "Lead with aspirations, goals, and outcomes your audience dreams of. Build messaging that paints a picture of success and pulls them toward your solution.",
+      "People aren't searching for a fix — they're drawn to an identity, aesthetic, or aspiration. Lead with the vision, then introduce the product as the vehicle.",
+    question: '"What lifestyle or identity does this product unlock?"',
     examples: [
-      "\"Imagine closing deals 3x faster\"",
-      "\"What if your team could ship every week?\"",
-      "\"The fastest path to 10K subscribers\"",
+      '"Imagine closing deals 3x faster"',
+      '"What if your team could ship every week?"',
+      '"The fastest path to 10K subscribers"',
     ],
-    color: "border-green-200 hover:border-green-400",
-    activeColor: "border-green-500 bg-green-50/50",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Z" />
-        <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-        <line x1="9" y1="9" x2="9.01" y2="9" />
-        <line x1="15" y1="9" x2="15.01" y2="9" />
-      </svg>
-    ),
+    glowColor: "rgba(22,163,74,.06)",
+    selectedClass: "selected-desire",
   },
 ] as const;
 
@@ -143,139 +139,246 @@ export function OrganizingPrincipleSelector({
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="text-center mb-10">
-        <h1 className="text-2xl font-bold mb-2">
+    <div>
+      {/* Step header */}
+      <div style={{ marginBottom: 40 }}>
+        <div
+          style={{
+            fontSize: 11, fontWeight: 600, letterSpacing: ".1em",
+            textTransform: "uppercase", color: "var(--ink-3)", marginBottom: 10,
+          }}
+        >
+          Step 1 of 5
+        </div>
+        <h1
+          style={{
+            fontFamily: "var(--font-instrument-serif), Georgia, serif",
+            fontSize: 38, color: "var(--ink)",
+            letterSpacing: "-.02em", lineHeight: 1.15, marginBottom: 12,
+          }}
+        >
           Choose Your Creative Approach
         </h1>
-        <p className="text-gray-500 max-w-lg mx-auto">
-          How do you want to build your messaging strategy? This shapes the
-          order of your creative workflow.
+        <p style={{ fontSize: 15, color: "var(--ink-2)", lineHeight: 1.65, maxWidth: 560 }}>
+          Every product gets discovered one of two ways. Understanding which one
+          drives your category tells you where to start building messaging.
         </p>
       </div>
 
-      {productDescription && !aiRecommendation && (
-        <div className="mb-8">
-          <Button
-            variant="outline"
+      {/* AI banner */}
+      {aiRecommendation ? (
+        <div
+          style={{
+            display: "flex", alignItems: "center", gap: 12,
+            background: "var(--surface-2)", border: "1px solid var(--cse-border)",
+            borderRadius: 16, padding: "14px 18px",
+            marginBottom: 32,
+          }}
+        >
+          <div style={{ fontSize: 20, flexShrink: 0 }}>✦</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 2 }}>
+              AI Recommendation — {Math.round(aiRecommendation.confidence * 100)}% confidence
+            </div>
+            <div style={{ fontSize: 12, color: "var(--ink-2)", lineHeight: 1.5 }}>
+              {aiRecommendation.rationale}
+              {selected !== aiRecommendation.recommendation && (
+                <span style={{ color: "var(--ink-3)", marginLeft: 6 }}>
+                  (You&apos;re overriding this — that&apos;s totally fine!)
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : productDescription ? (
+        <div
+          style={{
+            display: "flex", alignItems: "center", gap: 12,
+            background: "var(--surface-2)", border: "1px solid var(--cse-border)",
+            borderRadius: 16, padding: "14px 18px",
+            marginBottom: 32,
+          }}
+        >
+          <div style={{ fontSize: 20, flexShrink: 0 }}>✦</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 2 }}>
+              AI Recommendation available
+            </div>
+            <div style={{ fontSize: 12, color: "var(--ink-2)", lineHeight: 1.5 }}>
+              Claude can analyse your product description and suggest the best approach.
+            </div>
+          </div>
+          <button
             onClick={handleGetRecommendation}
             disabled={aiLoading}
+            style={{
+              flexShrink: 0,
+              background: "white", color: "var(--ink)",
+              padding: "8px 16px", borderRadius: 10,
+              fontSize: 13, fontWeight: 500, border: "1px solid var(--cse-border)",
+              cursor: aiLoading ? "not-allowed" : "pointer",
+              boxShadow: "var(--shadow-xs)", fontFamily: "inherit",
+              opacity: aiLoading ? 0.6 : 1,
+            }}
           >
-            {aiLoading ? "Analyzing product..." : "Get AI Recommendation"}
-          </Button>
+            {aiLoading ? "Analysing…" : "Apply"}
+          </button>
         </div>
-      )}
+      ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl mb-8">
-        {PRINCIPLES.map((principle) => {
-          const isSelected = selected === principle.key;
-          const isAiRecommended =
-            aiRecommendation?.recommendation === principle.key;
-
-          let cardClass: string;
-          if (isAiRecommended && isSelected) {
-            cardClass =
-              "border-violet-500 bg-violet-50/60 border-dashed shadow-md shadow-violet-100";
-          } else if (isAiRecommended && !isSelected) {
-            cardClass =
-              "border-violet-300 bg-violet-50/30 border-dashed hover:border-violet-400";
-          } else if (isSelected) {
-            cardClass = principle.activeColor;
-          } else {
-            cardClass = principle.color;
-          }
+      {/* Choice cards */}
+      <div
+        style={{
+          display: "grid", gridTemplateColumns: "1fr 1fr",
+          gap: 16, marginBottom: 32,
+        }}
+      >
+        {PRINCIPLES.map((p) => {
+          const isSelected = selected === p.key;
+          const isAiRecommended = aiRecommendation?.recommendation === p.key;
 
           return (
-            <button
-              key={principle.key}
-              type="button"
-              onClick={() => setSelected(principle.key)}
-              className={`relative text-left rounded-xl border-2 p-6 transition-all ${cardClass}`}
+            <div
+              key={p.key}
+              className="choice-card-glow"
+              onClick={() => setSelected(p.key)}
+              style={{
+                background: "white",
+                border: `2px solid ${isSelected ? "var(--ink)" : "var(--cse-border)"}`,
+                borderRadius: 24, padding: 28,
+                cursor: "pointer",
+                transition: "all .2s",
+                position: "relative", overflow: "hidden",
+                boxShadow: isSelected ? "var(--shadow-md)" : "none",
+                ["--glow-color" as string]: p.glowColor,
+              } as React.CSSProperties}
+              onMouseOver={e => {
+                const el = e.currentTarget as HTMLDivElement;
+                if (!isSelected) el.style.borderColor = "var(--cse-border-2)";
+                el.style.transform = "translateY(-2px)";
+                el.style.boxShadow = "var(--shadow-md)";
+              }}
+              onMouseOut={e => {
+                const el = e.currentTarget as HTMLDivElement;
+                el.style.borderColor = isSelected ? "var(--ink)" : "var(--cse-border)";
+                el.style.transform = "none";
+                el.style.boxShadow = isSelected ? "var(--shadow-md)" : "none";
+              }}
             >
-              {isAiRecommended && (
-                <div className="absolute -top-3 left-4 flex items-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2.5 py-0.5 text-[11px] font-medium text-white shadow-sm">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z" />
-                    </svg>
-                    AI Recommended
-                  </span>
-                  <span className="rounded-full bg-violet-100 px-1.5 py-0.5 text-[10px] font-medium text-violet-700">
-                    {Math.round(aiRecommendation!.confidence * 100)}%
-                  </span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-gray-500">{principle.icon}</span>
-                <div>
-                  <h2 className="text-lg font-semibold">{principle.title}</h2>
-                  <p className="text-sm text-gray-500">{principle.subtitle}</p>
-                </div>
+              {/* Animated checkmark */}
+              <div
+                style={{
+                  position: "absolute", top: 20, right: 20,
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: "var(--ink)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "white", fontSize: 12,
+                  opacity: isSelected ? 1 : 0,
+                  transform: isSelected ? "scale(1)" : "scale(0.6)",
+                  transition: "all .2s",
+                }}
+              >
+                ✓
               </div>
 
-              <p className="text-sm text-gray-600 mb-4">
-                {principle.description}
-              </p>
-
-              {isAiRecommended && aiRecommendation && (
-                <div className="mb-4 rounded-md bg-violet-100/60 p-3">
-                  <p className="text-xs text-violet-700 mb-1.5">
-                    {aiRecommendation.rationale}
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {aiRecommendation.keyFactors.map((factor) => (
-                      <span
-                        key={factor}
-                        className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-200/70 text-violet-700"
-                      >
-                        {factor}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                  Example hooks
-                </p>
-                {principle.examples.map((example) => (
-                  <p
-                    key={example}
-                    className="text-sm text-gray-500 italic pl-3 border-l-2 border-gray-200"
+              {/* Badge */}
+              <div
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "4px 10px", borderRadius: 100,
+                  fontSize: 11, fontWeight: 600, letterSpacing: ".04em",
+                  textTransform: "uppercase", marginBottom: 16,
+                  ...p.badgeStyle,
+                }}
+              >
+                {p.badge}
+                {isAiRecommended && (
+                  <span
+                    style={{
+                      marginLeft: 4, background: "#7c3aed", color: "white",
+                      borderRadius: 100, padding: "1px 6px", fontSize: 10,
+                    }}
                   >
-                    {example}
-                  </p>
+                    AI pick
+                  </span>
+                )}
+              </div>
+
+              <div style={{ fontSize: 20, fontWeight: 600, color: "var(--ink)", marginBottom: 4, letterSpacing: "-.02em" }}>
+                {p.title}
+              </div>
+              <div style={{ fontSize: 13, color: "var(--ink-3)", marginBottom: 16 }}>{p.subtitle}</div>
+
+              <div style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.6, marginBottom: 20 }}>
+                {p.description}
+              </div>
+
+              {/* Quote block */}
+              <div
+                style={{
+                  fontSize: 12, fontWeight: 600, color: "var(--ink)",
+                  fontStyle: "italic", padding: "10px 14px",
+                  background: "var(--surface)", borderRadius: 8,
+                  borderLeft: "3px solid var(--cse-border-2)",
+                  marginBottom: 16,
+                }}
+              >
+                {p.question}
+              </div>
+
+              {/* Example hooks */}
+              <div
+                style={{
+                  fontSize: 10, fontWeight: 700, letterSpacing: ".1em",
+                  textTransform: "uppercase", color: "var(--ink-3)", marginBottom: 8,
+                }}
+              >
+                Example hooks
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {p.examples.map((ex) => (
+                  <div
+                    key={ex}
+                    style={{
+                      fontSize: 12, color: "var(--ink-2)", fontStyle: "italic",
+                      padding: "6px 10px", borderRadius: 6,
+                      background: "var(--surface)", border: "1px solid var(--cse-border)",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {ex}
+                  </div>
                 ))}
               </div>
-            </button>
+            </div>
           );
         })}
       </div>
 
-      {aiRecommendation && selected !== aiRecommendation.recommendation && (
-        <p className="text-xs text-gray-400 mb-4">
-          You&apos;re overriding the AI recommendation — that&apos;s totally fine!
-        </p>
-      )}
-
-      <Button
-        onClick={handleContinue}
-        disabled={!selected || loading}
-        size="lg"
+      {/* Action bar */}
+      <div
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          paddingTop: 24, borderTop: "1px solid var(--cse-border)",
+        }}
       >
-        {loading ? "Setting up..." : "Continue"}
-      </Button>
+        <div />
+        <button
+          onClick={handleContinue}
+          disabled={!selected || loading}
+          style={{
+            background: "var(--ink)", color: "white",
+            padding: "9px 18px", borderRadius: 10,
+            fontSize: 14, fontWeight: 500, border: "none",
+            cursor: selected && !loading ? "pointer" : "not-allowed",
+            opacity: selected && !loading ? 1 : 0.4,
+            fontFamily: "inherit",
+            boxShadow: "var(--shadow-xs)",
+          }}
+        >
+          {loading ? "Setting up…" : "Continue →"}
+        </button>
+      </div>
     </div>
   );
 }

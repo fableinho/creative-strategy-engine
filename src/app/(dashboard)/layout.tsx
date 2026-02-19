@@ -15,26 +15,66 @@ export default async function DashboardLayout({
   if (!user) redirect("/login");
 
   return (
-    <div className="min-h-screen">
-      <nav className="border-b">
-        <div className="max-w-5xl mx-auto px-6 flex items-center justify-between h-14">
-          <Link href="/dashboard" className="font-semibold">
-            Creative Strategy Engine
-          </Link>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-gray-500">{user.email}</span>
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                className="text-gray-500 hover:text-black"
-              >
-                Sign out
-              </button>
-            </form>
+    <div className="min-h-screen" style={{ background: "var(--surface)" }}>
+      <nav
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+          height: 52,
+          background: "rgba(250,250,248,.88)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--cse-border)",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0 24px",
+        }}
+      >
+        <Link
+          href="/dashboard"
+          style={{
+            display: "flex", alignItems: "center", gap: 8,
+            fontWeight: 600, fontSize: 14, color: "var(--ink)",
+            textDecoration: "none",
+          }}
+        >
+          <div
+            style={{
+              width: 26, height: 26, borderRadius: 7,
+              background: "var(--ink)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "white", fontSize: 13,
+            }}
+          >
+            ⚡
           </div>
+          Creative Strategy Engine
+        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ fontSize: 13, color: "var(--ink-2)" }}>{user.email}</span>
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              style={{
+                fontSize: 13, color: "var(--ink-2)",
+                background: "none", border: "none", cursor: "pointer",
+                padding: "4px 8px", borderRadius: 6,
+                fontFamily: "inherit",
+              }}
+              onMouseOver={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = "var(--surface-2)";
+                (e.currentTarget as HTMLButtonElement).style.color = "var(--ink)";
+              }}
+              onMouseOut={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = "none";
+                (e.currentTarget as HTMLButtonElement).style.color = "var(--ink-2)";
+              }}
+            >
+              Sign out
+            </button>
+          </form>
         </div>
       </nav>
-      {children}
+      <div style={{ paddingTop: 52 }}>
+        {children}
+      </div>
     </div>
   );
 }

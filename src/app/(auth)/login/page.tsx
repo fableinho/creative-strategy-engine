@@ -37,75 +37,234 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-8 p-8">
-        <h1 className="text-2xl font-bold text-center">Sign In</h1>
+    <div style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+      {/* Left — Brand panel */}
+      <div
+        style={{
+          background: "#111110",
+          display: "flex", flexDirection: "column",
+          justifyContent: "space-between",
+          padding: 48,
+          position: "relative", overflow: "hidden",
+        }}
+      >
+        {/* Subtle radial glow */}
+        <div
+          style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse at 20% 50%, rgba(255,200,100,.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(100,180,255,.06) 0%, transparent 50%)",
+            pointerEvents: "none",
+          }}
+        />
 
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleEmailLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 block w-full rounded-md border px-3 py-2"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 block w-full rounded-md border px-3 py-2"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800 disabled:opacity-50"
+        {/* Logo */}
+        <div
+          style={{
+            display: "flex", alignItems: "center", gap: 10,
+            color: "white", fontWeight: 600, fontSize: 15,
+            position: "relative", zIndex: 1,
+          }}
+        >
+          <div
+            style={{
+              width: 32, height: 32, borderRadius: 9,
+              background: "rgba(255,255,255,.15)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 16,
+            }}
           >
-            {loading ? "Signing in..." : "Sign in with Email"}
-          </button>
-        </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t" />
+            ⚡
           </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-2 text-gray-500">or</span>
-          </div>
+          Creative Strategy Engine
         </div>
 
-        <button
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          className="w-full rounded-md border px-4 py-2 hover:bg-gray-50 disabled:opacity-50"
-        >
-          Sign in with Google
-        </button>
+        {/* Tagline */}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-instrument-serif), Georgia, serif",
+              fontSize: 44, lineHeight: 1.1,
+              color: "white", letterSpacing: "-.02em",
+              marginBottom: 20,
+            }}
+          >
+            Turn products<br />
+            into <em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>endless</em><br />
+            messaging angles.
+          </h1>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,.5)", lineHeight: 1.6, maxWidth: 320 }}>
+            A systematic framework for creative strategists who develop
+            direct response ads at scale.
+          </p>
+        </div>
 
-        <p className="text-center text-sm text-gray-500">
-          Don&apos;t have an account?{" "}
-          <a href="/signup" className="underline hover:text-black">
-            Sign up
-          </a>
-        </p>
+        {/* Feature list */}
+        <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+          {[
+            "AI-powered messaging angle generation",
+            "Full funnel deployment across 22 formats",
+            "Exportable creative briefs for production",
+          ].map((f) => (
+            <div key={f} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "rgba(255,255,255,.55)" }}>
+              <div style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(255,255,255,.3)", flexShrink: 0 }} />
+              {f}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right — Form */}
+      <div
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          padding: 48, background: "var(--surface)",
+        }}
+      >
+        <div style={{ width: "100%", maxWidth: 380 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 600, color: "var(--ink)", marginBottom: 6, letterSpacing: "-.02em" }}>
+            Welcome back
+          </h2>
+          <p style={{ fontSize: 14, color: "var(--ink-2)", marginBottom: 32 }}>
+            Sign in to your workspace
+          </p>
+
+          {error && (
+            <div
+              style={{
+                background: "var(--cse-red-bg)", color: "var(--cse-red)",
+                border: "1px solid var(--cse-red-border)",
+                padding: "10px 14px", borderRadius: 8,
+                fontSize: 13, marginBottom: 16,
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleEmailLogin}>
+            <div style={{ marginBottom: 16 }}>
+              <label
+                htmlFor="email"
+                style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--ink)", marginBottom: 6 }}
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@agency.com"
+                style={{
+                  width: "100%", padding: "9px 12px",
+                  background: "white", border: "1px solid var(--cse-border)",
+                  borderRadius: 10, fontSize: 14,
+                  fontFamily: "inherit", color: "var(--ink)",
+                  outline: "none", boxShadow: "var(--shadow-xs)",
+                  boxSizing: "border-box",
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "var(--ink)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(17,17,16,.08)";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "var(--cse-border)";
+                  e.target.style.boxShadow = "var(--shadow-xs)";
+                }}
+              />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <label
+                htmlFor="password"
+                style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--ink)", marginBottom: 6 }}
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                style={{
+                  width: "100%", padding: "9px 12px",
+                  background: "white", border: "1px solid var(--cse-border)",
+                  borderRadius: 10, fontSize: 14,
+                  fontFamily: "inherit", color: "var(--ink)",
+                  outline: "none", boxShadow: "var(--shadow-xs)",
+                  boxSizing: "border-box",
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "var(--ink)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(17,17,16,.08)";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "var(--cse-border)";
+                  e.target.style.boxShadow = "var(--shadow-xs)";
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%", padding: "9px 18px",
+                background: "var(--ink)", color: "white",
+                border: "none", borderRadius: 10,
+                fontSize: 14, fontWeight: 500,
+                fontFamily: "inherit", cursor: loading ? "not-allowed" : "pointer",
+                opacity: loading ? 0.6 : 1,
+                boxShadow: "var(--shadow-xs)",
+              }}
+            >
+              {loading ? "Signing in…" : "Sign in with Email"}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div
+            style={{
+              display: "flex", alignItems: "center", gap: 12,
+              margin: "20px 0", color: "var(--ink-3)", fontSize: 12,
+            }}
+          >
+            <div style={{ flex: 1, height: 1, background: "var(--cse-border)" }} />
+            or
+            <div style={{ flex: 1, height: 1, background: "var(--cse-border)" }} />
+          </div>
+
+          {/* Google */}
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            style={{
+              width: "100%", padding: "9px 16px", borderRadius: 10,
+              border: "1px solid var(--cse-border)", background: "white",
+              fontFamily: "inherit", fontSize: 14, fontWeight: 500,
+              color: "var(--ink)", cursor: loading ? "not-allowed" : "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              boxShadow: "var(--shadow-xs)",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            Sign in with Google
+          </button>
+
+          <p style={{ marginTop: 24, textAlign: "center", fontSize: 13, color: "var(--ink-2)" }}>
+            Don&apos;t have an account?{" "}
+            <a href="/signup" style={{ color: "var(--ink)", fontWeight: 500, textDecoration: "none" }}>
+              Sign up
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

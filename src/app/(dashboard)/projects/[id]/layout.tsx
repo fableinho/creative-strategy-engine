@@ -23,7 +23,7 @@ export default async function ProjectLayout({
 
   const { data: projectData, error } = await supabase
     .from("projects")
-    .select("id, name, metadata")
+    .select("id, name, metadata, clients (id, name)")
     .eq("id", id)
     .eq("owner_id", user.id)
     .single();
@@ -35,11 +35,14 @@ export default async function ProjectLayout({
   const currentStep =
     (project.metadata as { current_step?: number } | null)?.current_step ?? 0;
 
+  const clientName: string = project.clients?.name ?? "";
+
   return (
     <div className="flex h-[calc(100vh-3.5rem)]">
       <WizardSidebar
         projectId={project.id}
         projectName={project.name}
+        clientName={clientName}
         currentStep={currentStep}
       />
       <main className="flex-1 overflow-y-auto">

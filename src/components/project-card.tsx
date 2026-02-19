@@ -5,7 +5,7 @@ import { ProjectActions } from "@/components/project-actions";
 
 const STEPS = [
   "Audiences",
-  "Pain/Desires",
+  "Pain & Desires",
   "Angles",
   "Hooks",
   "Formats",
@@ -15,37 +15,35 @@ interface ProjectCardProps {
   id: string;
   name: string;
   clientName: string;
+  clientColor?: string;
   status: string;
   currentStep: number; // 0-4 index, or -1 for not started
   updatedAt: string;
 }
 
-const statusColors: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-700",
-  active: "bg-green-100 text-green-700",
-  in_review: "bg-yellow-100 text-yellow-700",
-  approved: "bg-blue-100 text-blue-700",
+const statusStyles: Record<string, { background: string; color: string; border: string }> = {
+  draft:     { background: "#e8e7e2", color: "#63635d", border: "transparent" },
+  active:    { background: "#f0fdf4", color: "#16a34a", border: "#bbf7d0" },
+  in_review: { background: "#fef3c7", color: "#d97706", border: "#fcd34d" },
+  approved:  { background: "#eff6ff", color: "#2563eb", border: "#bfdbfe" },
 };
 
-function StepProgress({ currentStep }: { currentStep: number }) {
+function SegmentedProgress({ currentStep }: { currentStep: number }) {
   return (
-    <div className="flex items-center gap-1.5">
-      {STEPS.map((step, i) => (
-        <div key={step} className="group relative flex items-center">
+    <div>
+      <div className="progress-bar-wrap" style={{ marginBottom: 6 }}>
+        {STEPS.map((_, i) => (
           <div
-            className={`h-2.5 w-2.5 rounded-full transition-colors ${
-              i < currentStep
-                ? "bg-black"
-                : i === currentStep
-                  ? "bg-black ring-2 ring-black/20"
-                  : "bg-gray-200"
-            }`}
+            key={i}
+            className={`progress-bar-seg ${i < currentStep ? "done" : i === currentStep ? "active" : ""}`}
           />
-          <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            {step}
-          </span>
-        </div>
-      ))}
+        ))}
+      </div>
+      <span style={{ fontSize: 11, color: "var(--ink-3)", fontWeight: 500 }}>
+        {currentStep >= 0 && currentStep < STEPS.length
+          ? `Step ${currentStep + 1} of 5 — ${STEPS[currentStep]}`
+          : "Not started"}
+      </span>
     </div>
   );
 }
@@ -54,39 +52,81 @@ export function ProjectCard({
   id,
   name,
   clientName,
+  clientColor,
   status,
   currentStep,
   updatedAt,
 }: ProjectCardProps) {
-  const stepLabel =
-    currentStep >= 0 && currentStep < STEPS.length
-      ? STEPS[currentStep]
-      : "Not started";
+  const st = statusStyles[status] ?? statusStyles.draft;
+  const color = clientColor ?? "#a8a39a";
 
   return (
-    <div className="relative rounded-lg border hover:border-gray-400 transition-colors">
-      <div className="absolute top-3 right-3 z-10">
+    <div
+      className="project-card-accent"
+      style={{
+        background: "white",
+        border: "1px solid var(--cse-border)",
+        borderRadius: 16,
+        boxShadow: "var(--shadow-xs)",
+        transition: "all .2s",
+        // CSS custom prop for the accent bar color
+        ["--client-color" as string]: color,
+      }}
+      onMouseOver={e => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.borderColor = "var(--cse-border-2)";
+        el.style.boxShadow = "var(--shadow-md)";
+        el.style.transform = "translateY(-2px)";
+      }}
+      onMouseOut={e => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.borderColor = "var(--cse-border)";
+        el.style.boxShadow = "var(--shadow-xs)";
+        el.style.transform = "none";
+      }}
+    >
+      {/* Actions sit outside the Link */}
+      <div style={{ position: "absolute", top: 14, right: 14, zIndex: 10 }}>
         <ProjectActions projectId={id} projectName={name} />
       </div>
-      <Link href={`/projects/${id}`} className="block p-5">
-        <div className="flex items-start justify-between mb-1 pr-8">
-          <h3 className="font-medium text-gray-900">{name}</h3>
+
+      <Link href={`/projects/${id}`} style={{ display: "block", padding: 20, textDecoration: "none" }}>
+        {/* Top row */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12, paddingRight: 32 }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.02em", lineHeight: 1.3 }}>
+              {name}
+            </div>
+            <div style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 2 }}>{clientName}</div>
+          </div>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full shrink-0 ml-2 ${statusColors[status] ?? "bg-gray-100 text-gray-700"}`}
+            style={{
+              display: "inline-flex", alignItems: "center",
+              padding: "2px 8px", borderRadius: 100,
+              fontSize: 11, fontWeight: 500, letterSpacing: ".02em",
+              background: st.background, color: st.color,
+              border: `1px solid ${st.border}`,
+              whiteSpace: "nowrap", flexShrink: 0,
+            }}
           >
             {status.replace("_", " ")}
           </span>
         </div>
 
-        <p className="text-sm text-gray-500 mb-4">{clientName}</p>
+        {/* Progress */}
+        <div style={{ marginBottom: 14 }}>
+          <SegmentedProgress currentStep={currentStep} />
+        </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-1.5">
-            <StepProgress currentStep={currentStep} />
-            <span className="text-xs text-gray-400">{stepLabel}</span>
-          </div>
-          <span className="text-xs text-gray-400">
-            {new Date(updatedAt).toLocaleDateString()}
+        {/* Bottom */}
+        <div
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            paddingTop: 12, borderTop: "1px solid var(--surface-2)",
+          }}
+        >
+          <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+            {new Date(updatedAt).toLocaleDateString("de-DE")}
           </span>
         </div>
       </Link>
