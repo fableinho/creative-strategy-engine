@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 
 const anthropic = new Anthropic();
 
-const SYSTEM_PROMPT = `You are a creative strategy expert who deeply understands customer psychology and market segmentation. Given a product/service description and the chosen messaging approach (pain-first or desire-first), generate relevant pain points, desires, and target audiences.
+const SYSTEM_PROMPT = `You are a senior creative strategist with deep expertise in consumer psychology, brand positioning, and category-level marketing insight. Your job is to generate hyper-specific, commercially grounded pain points, desires, and audience segments for a given product — not generic marketing speak.
 
 Respond in this exact JSON format:
 {
@@ -20,15 +20,16 @@ Respond in this exact JSON format:
 }
 
 Guidelines:
-- Generate 4-6 pain points that are specific and emotionally resonant (not generic)
-- Generate 3-5 desires that represent real aspirations of the target market
-- Generate 3-5 distinct audience segments that would buy this product
-- If approach is "pain", weight pain points with higher intensity and more entries
-- If approach is "desire", weight desires with higher intensity and more entries
-- Pain points should describe real frustrations, not just the absence of the product
-- Desires should describe outcomes, not features
-- Audiences should be specific enough to write targeted copy for
-- Intensity reflects how strongly the audience feels this pain/desire (1=mild, 10=acute)
+- Every pain, desire, and audience must be SPECIFIC to this exact product, category, and brand — never generic
+- Pain points must name the real, felt frustration in the customer's own language — not a product feature restated as a problem
+- Desires must describe a concrete outcome or identity shift the customer is chasing — not a feature or benefit list
+- Audiences must be specific enough that you could write a single ad targeting only them — avoid broad labels like "young women" or "busy professionals"
+- If approach is "pain", generate 5-6 pain points (higher intensity scores) and 2-3 desires
+- If approach is "desire", generate 5-6 desires (higher intensity scores) and 2-3 pain points
+- Always generate 3-5 audience segments
+- Use the brand name, client name, and full product description to ground everything in the real category context
+- Intensity reflects how acutely the audience experiences this (1=mild background irritation, 10=keeps them up at night)
+- If a Step 1 AI rationale is provided, use it to sharpen your product category understanding
 
 Return ONLY valid JSON, no markdown or extra text.`;
 
@@ -44,40 +45,63 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { productDescription, projectId, approach } = body;
+  const { projectId } = body;
 
-  if (!productDescription || typeof productDescription !== "string") {
+  if (!projectId || typeof projectId !== "string") {
     return NextResponse.json(
-      { error: "productDescription is required" },
+      { error: "projectId is required" },
       { status: 400 }
     );
   }
 
-  if (projectId) {
-    const { data: project } = await supabase
-      .from("projects")
-      .select("id")
-      .eq("id", projectId)
-      .eq("owner_id", user.id)
-      .single();
+  // Fetch full project context server-side for rich, specific suggestions
+  const { data: projectData } = await (supabase
+    .from("projects") as any)
+    .select("id, name, description, principle_rationale, metadata, clients (name)")
+    .eq("id", projectId)
+    .eq("owner_id", user.id)
+    .single();
 
-    if (!project) {
-      return NextResponse.json(
-        { error: "Project not found" },
-        { status: 404 }
-      );
-    }
+  if (!projectData) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  try {
-    const userPrompt = [
-      `Product/Service Description:\n${productDescription}`,
-      approach ? `\nMessaging Approach: ${approach}-first` : "",
-    ].join("");
+  const project = projectData as {
+    id: string;
+    name: string;
+    description: string | null;
+    principle_rationale: string | null;
+    metadata: { organizing_approach?: string; ai_recommendation?: { rationale?: string } } | null;
+    clients: { name: string } | null;
+  };
 
+  const approach = project.metadata?.organizing_approach ?? "pain";
+  const clientName = project.clients?.name ?? null;
+  const aiRationale = project.metadata?.ai_recommendation?.rationale ?? project.principle_rationale ?? null;
+
+  // Build a rich, grounded user prompt
+  const contextLines: string[] = [];
+
+  if (clientName) {
+    contextLines.push(`Brand / Client: ${clientName}`);
+  }
+  contextLines.push(`Project: ${project.name}`);
+  if (project.description?.trim()) {
+    contextLines.push(`Product / Service Description:\n${project.description.trim()}`);
+  } else {
+    contextLines.push(`Product / Service: ${project.name}`);
+  }
+  contextLines.push(`Chosen Messaging Approach: ${approach}-first`);
+  if (aiRationale) {
+    contextLines.push(`Step 1 Strategic Rationale: ${aiRationale}`);
+  }
+
+  const userPrompt = contextLines.join("\n\n");
+
+  try {
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
-      max_tokens: 1024,
+      max_tokens: 1500,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userPrompt }],
     });
@@ -87,7 +111,11 @@ export async function POST(request: Request) {
       throw new Error("No text response from AI");
     }
 
-    const cleaned = textBlock.text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim(); const result = JSON.parse(cleaned);
+    const cleaned = textBlock.text
+      .replace(/^```json\s*/i, "")
+      .replace(/```\s*$/i, "")
+      .trim();
+    const result = JSON.parse(cleaned);
 
     return NextResponse.json({
       pains: result.pains ?? [],

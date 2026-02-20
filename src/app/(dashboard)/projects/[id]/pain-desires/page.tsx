@@ -28,7 +28,6 @@ export default function PainDesiresPage() {
   const params = useParams();
   const projectId = params.id as string;
 
-  const projectName = useProjectStore((s) => s.projectName);
   const addPainDesire = useProjectStore((s) => s.addPainDesire);
   const addAudience = useProjectStore((s) => s.addAudience);
   const painDesires = useProjectStore((s) => s.painDesires);
@@ -54,10 +53,7 @@ export default function PainDesiresPage() {
       const res = await fetch("/api/ai/step2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productDescription: projectName,
-          projectId,
-        }),
+        body: JSON.stringify({ projectId }),
       });
 
       if (res.ok) {
