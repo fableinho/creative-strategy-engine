@@ -298,7 +298,7 @@ export default function HooksPage() {
 
       {/* AI Suggest dialog */}
       <Dialog open={aiPanelOpen} onOpenChange={(open) => { setAiPanelOpen(open); if (!open) setAiSuggestions([]); }}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="w-[520px] max-w-[95vw]">
           <DialogHeader>
             <DialogTitle>✦ AI Hook Suggestions</DialogTitle>
             <p className="text-xs text-gray-500 mt-1">
@@ -306,40 +306,39 @@ export default function HooksPage() {
             </p>
           </DialogHeader>
 
-          <div className="space-y-4 mt-2">
-            {/* Controls */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">Messaging Angle</label>
-                <Select value={aiAngleId} onValueChange={(v) => { setAiAngleId(v); setAiSuggestions([]); }}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select angle" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {messagingAngles.map((angle) => (
-                      <SelectItem key={angle.id} value={angle.id}>
-                        {angle.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="space-y-3 mt-2">
+            {/* Angle — full width so long titles don't overflow */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Messaging Angle</label>
+              <Select value={aiAngleId} onValueChange={(v) => { setAiAngleId(v); setAiSuggestions([]); }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select angle" />
+                </SelectTrigger>
+                <SelectContent>
+                  {messagingAngles.map((angle) => (
+                    <SelectItem key={angle.id} value={angle.id}>
+                      {angle.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">Awareness Stage</label>
-                <Select value={aiStage} onValueChange={(v) => { setAiStage(v as AwarenessStage); setAiSuggestions([]); }}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {AWARENESS_STAGES.map((s) => (
-                      <SelectItem key={s.key} value={s.key}>
-                        {s.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Stage — full width beneath */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Awareness Stage</label>
+              <Select value={aiStage} onValueChange={(v) => { setAiStage(v as AwarenessStage); setAiSuggestions([]); }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {AWARENESS_STAGES.map((s) => (
+                    <SelectItem key={s.key} value={s.key}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <Button
@@ -352,10 +351,10 @@ export default function HooksPage() {
 
             {/* Suggestions list */}
             {hasSuggestions && (
-              <div className="space-y-3 pt-1">
-                <div className="flex items-center justify-between">
+              <div className="space-y-3 pt-1 border-t">
+                <div className="flex items-center justify-between pt-3">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    {aiSuggestions.length} suggestion{aiSuggestions.length !== 1 ? "s" : ""} for {aiStageName}
+                    {aiSuggestions.length} suggestion{aiSuggestions.length !== 1 ? "s" : ""} · {aiStageName}
                   </p>
                   <button
                     onClick={handleAcceptAll}
@@ -366,27 +365,29 @@ export default function HooksPage() {
                   </button>
                 </div>
 
-                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                <div className="space-y-2 max-h-64 overflow-y-auto">
                   {aiSuggestions.map((suggestion, i) => (
                     <div
                       key={i}
-                      className="rounded-lg border bg-gray-50 p-3 space-y-2"
+                      className="rounded-lg border bg-gray-50 p-3"
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm text-gray-900 leading-relaxed flex-1">
+                      <div className="flex items-start gap-3">
+                        <p className="text-sm text-gray-900 leading-relaxed flex-1 min-w-0">
                           {suggestion.content}
                         </p>
                         <button
                           onClick={() => handleAcceptSuggestion(suggestion, i)}
                           disabled={acceptingId === i}
-                          className="shrink-0 rounded-md bg-black text-white px-2.5 py-1 text-xs font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                          className="shrink-0 rounded-md bg-black text-white px-3 py-1.5 text-xs font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
                         >
                           {acceptingId === i ? "..." : "Add"}
                         </button>
                       </div>
-                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">
-                        {suggestion.type}
-                      </Badge>
+                      <div className="mt-2">
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">
+                          {suggestion.type}
+                        </Badge>
+                      </div>
                     </div>
                   ))}
                 </div>
