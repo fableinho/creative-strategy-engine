@@ -133,7 +133,7 @@ export function OrganizingPrincipleSelector({
       .eq("id", projectId);
 
     if (!error) {
-      router.refresh();
+      router.push(`/projects/${projectId}/pain-desires`);
     }
     setLoading(false);
   }

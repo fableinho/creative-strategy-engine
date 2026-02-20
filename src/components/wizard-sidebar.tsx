@@ -6,7 +6,7 @@ import { useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export const WIZARD_STEPS = [
-  { key: "audiences",    label: "Audiences",         href: "" },
+  { key: "audiences",    label: "Creative Approach",  href: "" },
   { key: "pain-desires", label: "Pain & Desires",     href: "/pain-desires" },
   { key: "angles",       label: "Messaging Angles",   href: "/angles" },
   { key: "hooks",        label: "Hooks",              href: "/hooks" },

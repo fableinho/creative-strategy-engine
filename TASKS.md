@@ -188,44 +188,44 @@ Start here to get the foundation right:
 
 ## Step 4 – Funnel Deployment
 
-- [ ] **S4-01** - Build 5-column Trello-style board with awareness stage headers
+- [x] **S4-01** - Build 5-column Trello-style board with awareness stage headers
   - Columns: Unaware, Problem Aware, Solution Aware, Product Aware, Most Aware
 
-- [ ] **S4-02** - Populate board with all messaging angles as draggable cards
+- [x] **S4-02** - Populate board with all messaging angles as draggable cards
   - Card shows lens label + angle text snippet
 
-- [ ] **S4-03** - Implement drag-and-drop with @dnd-kit/core to assign angles to columns
+- [x] **S4-03** - Implement drag-and-drop with @dnd-kit/core to assign angles to columns
   - On drop: save `awareness_stage` to hooks table
 
-- [ ] **S4-04** - Create POST /api/ai/step4-stage route: recommend awareness stage for angle
+- [x] **S4-04** - Create POST /api/ai/step4-stage route: recommend awareness stage for angle
   - AI returns stage enum + brief reason why
 
-- [ ] **S4-05** - When angle placed in column, show hook input field below card
+- [x] **S4-05** - When angle placed in column, show hook input field below card
   - Multiple hooks per angle — add hook button
 
-- [ ] **S4-06** - Create POST /api/ai/step4-hooks route: generate 3-5 hook variations
+- [x] **S4-06** - Create POST /api/ai/step4-hooks route: generate 3-5 hook variations
   - Input: angle text + awareness stage + brand tone. Output: `string[]`
 
-- [ ] **S4-07** - Implement star/favorite toggle on each hook
+- [x] **S4-07** - Implement star/favorite toggle on each hook
   - Update `is_starred` boolean in hooks table. Starred = included in export.
 
 ---
 
 ## Step 5 – Format Execution
 
-- [ ] **S5-01** - Build 22 format cards as a selectable grid (5 category groups)
+- [x] **S5-01** - Build 22 format cards as a selectable grid (5 category groups)
   - Categories: Storytelling, Before/After, Founder Story, Us Vs Them, Social Proof Mashup
 
-- [ ] **S5-02** - For each starred hook, show format selection panel
+- [x] **S5-02** - For each starred hook, show format selection panel
   - Multi-select formats; persist to format_executions table
 
-- [ ] **S5-03** - Create POST /api/ai/step5 route: suggest best formats for hook + stage
+- [x] **S5-03** - Create POST /api/ai/step5 route: suggest best formats for hook + stage
   - Return ranked format list with brief rationale
 
-- [ ] **S5-04** - Generate concept outline/script for each hook+format combination
+- [x] **S5-04** - Generate concept outline/script for each hook+format combination
   - Call /api/ai/step5-concept; save to `concept_notes` field
 
-- [ ] **S5-05** - Build matrix view: starred hooks as rows, selected formats as columns
+- [x] **S5-05** - Build matrix view: starred hooks as rows, selected formats as columns
   - Cell shows concept note snippet; click to expand
 
 ---
