@@ -226,7 +226,7 @@ export default function HooksPage() {
           </p>
         </div>
       ) : (
-        <div className="-mx-8">
+        <div className="-mx-8 -mb-8">
           <HooksBoard projectId={projectId} onAddHook={handleOpenAdd} />
         </div>
       )}
