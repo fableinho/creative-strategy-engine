@@ -195,9 +195,13 @@ export async function POST(request: Request) {
       throw new Error("No text response from AI");
     }
 
-    const cleaned = textBlock.text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim(); const result = JSON.parse(cleaned);
-    const hooks: string[] = (result.hooks ?? []).map(
-      (h: { content: string; type?: string }) => h.content
+    const cleaned = textBlock.text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+    const result = JSON.parse(cleaned);
+    const hooks: { content: string; type: string }[] = (result.hooks ?? []).map(
+      (h: { content: string; type?: string }) => ({
+        content: h.content,
+        type: h.type ?? "question",
+      })
     );
 
     return NextResponse.json({ hooks });
