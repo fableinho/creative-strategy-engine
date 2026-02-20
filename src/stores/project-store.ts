@@ -13,6 +13,7 @@ interface ProjectState {
   projectId: string | null;
   projectName: string;
   currentStep: number;
+  organizingApproach: "pain" | "desire" | null;
   audiences: Audience[];
   painDesires: PainDesire[];
   painDesireAudiences: PainDesireAudience[];
@@ -53,6 +54,7 @@ const initialState = {
   projectId: null as string | null,
   projectName: "",
   currentStep: 0,
+  organizingApproach: null as "pain" | "desire" | null,
   audiences: [] as Audience[],
   painDesires: [] as PainDesire[],
   painDesireAudiences: [] as PainDesireAudience[],
@@ -125,11 +127,14 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         .map((h) => h.id)
     );
 
+    const meta = project?.metadata as { current_step?: number; organizing_approach?: string } | null;
+
     set({
       projectName: project?.name ?? "",
-      currentStep:
-        (project?.metadata as { current_step?: number } | null)
-          ?.current_step ?? 0,
+      currentStep: meta?.current_step ?? 0,
+      organizingApproach: (meta?.organizing_approach === "pain" || meta?.organizing_approach === "desire")
+        ? meta.organizing_approach
+        : null,
       audiences,
       painDesires,
       painDesireAudiences: painDesireAudiences.filter((pda) =>

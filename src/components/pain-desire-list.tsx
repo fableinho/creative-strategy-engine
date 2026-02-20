@@ -131,22 +131,37 @@ function PainDesireItem({
 
 interface PainDesireListProps {
   projectId: string;
+  type: PainDesireType;
 }
 
-export function PainDesireList({ projectId }: PainDesireListProps) {
+const CONFIG = {
+  pain: {
+    heading: "Pain Points",
+    subheading: "What problems does your audience face?",
+    placeholder: 'e.g. "Wasting hours on manual data entry"',
+    emptyText: "No pain points yet. Add your first one above.",
+  },
+  desire: {
+    heading: "Desires",
+    subheading: "What does your audience aspire to?",
+    placeholder: 'e.g. "Automate workflows and save 10hrs/week"',
+    emptyText: "No desires yet. Add your first one above.",
+  },
+} as const;
+
+export function PainDesireList({ projectId, type }: PainDesireListProps) {
   const painDesires = useProjectStore((s) => s.painDesires);
   const addPainDesire = useProjectStore((s) => s.addPainDesire);
   const updatePainDesire = useProjectStore((s) => s.updatePainDesire);
   const removePainDesire = useProjectStore((s) => s.removePainDesire);
 
   const [adding, setAdding] = useState(false);
-  const [newType, setNewType] = useState<PainDesireType>("pain");
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newIntensity, setNewIntensity] = useState(5);
 
-  const pains = painDesires.filter((pd) => pd.type === "pain");
-  const desires = painDesires.filter((pd) => pd.type === "desire");
+  const items = painDesires.filter((pd) => pd.type === type);
+  const cfg = CONFIG[type];
 
   async function handleAdd() {
     if (!newTitle.trim()) return;
@@ -156,7 +171,7 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
       .from("pain_desires")
       .insert({
         project_id: projectId,
-        type: newType,
+        type,
         title: newTitle.trim(),
         description: newDesc.trim() || null,
         intensity: newIntensity,
@@ -215,10 +230,8 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Pain Points & Desires</h2>
-          <p className="text-sm text-gray-500">
-            What problems does your audience face? What do they aspire to?
-          </p>
+          <h2 className="text-lg font-semibold">{cfg.heading}</h2>
+          <p className="text-sm text-gray-500">{cfg.subheading}</p>
         </div>
         <Button size="sm" onClick={() => setAdding(true)} disabled={adding}>
           + Add
@@ -227,38 +240,10 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
 
       {adding && (
         <div className="rounded-lg border border-dashed p-4 space-y-3">
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setNewType("pain")}
-              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                newType === "pain"
-                  ? "bg-red-50 border-red-300 text-red-700"
-                  : "border-gray-200 text-gray-500 hover:border-gray-300"
-              }`}
-            >
-              Pain
-            </button>
-            <button
-              type="button"
-              onClick={() => setNewType("desire")}
-              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                newType === "desire"
-                  ? "bg-green-50 border-green-300 text-green-700"
-                  : "border-gray-200 text-gray-500 hover:border-gray-300"
-              }`}
-            >
-              Desire
-            </button>
-          </div>
           <Input
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            placeholder={
-              newType === "pain"
-                ? 'e.g. "Wasting hours on manual data entry"'
-                : 'e.g. "Automate workflows and save 10hrs/week"'
-            }
+            placeholder={cfg.placeholder}
             autoFocus
           />
           <Textarea
@@ -300,12 +285,12 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
         </div>
       )}
 
-      {pains.length > 0 && (
+      {items.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-            Pain Points ({pains.length})
+            {cfg.heading} ({items.length})
           </h3>
-          {pains.map((pd) => (
+          {items.map((pd) => (
             <PainDesireItem
               key={pd.id}
               id={pd.id}
@@ -320,29 +305,9 @@ export function PainDesireList({ projectId }: PainDesireListProps) {
         </div>
       )}
 
-      {desires.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-            Desires ({desires.length})
-          </h3>
-          {desires.map((pd) => (
-            <PainDesireItem
-              key={pd.id}
-              id={pd.id}
-              type={pd.type}
-              title={pd.title}
-              description={pd.description}
-              intensity={pd.intensity}
-              onDelete={handleDelete}
-              onUpdate={handleUpdate}
-            />
-          ))}
-        </div>
-      )}
-
-      {painDesires.length === 0 && !adding && (
+      {items.length === 0 && !adding && (
         <div className="text-center py-10 text-gray-400 text-sm">
-          No pain points or desires yet. Add your first one above.
+          {cfg.emptyText}
         </div>
       )}
     </div>

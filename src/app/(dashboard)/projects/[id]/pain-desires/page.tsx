@@ -34,6 +34,7 @@ export default function PainDesiresPage() {
   const painDesires = useProjectStore((s) => s.painDesires);
   const audiences = useProjectStore((s) => s.audiences);
   const links = useProjectStore((s) => s.painDesireAudiences);
+  const organizingApproach = useProjectStore((s) => s.organizingApproach);
 
   const [aiLoading, setAiLoading] = useState(false);
   const [painSuggestions, setPainSuggestions] = useState<
@@ -161,6 +162,9 @@ export default function PainDesiresPage() {
     desireSuggestions.length > 0 ||
     audienceSuggestions.length > 0;
 
+  // Default to "pain" if approach not yet set (fallback)
+  const approach = organizingApproach ?? "pain";
+
   return (
     <div>
       <div className="flex items-start justify-between mb-8">
@@ -183,48 +187,46 @@ export default function PainDesiresPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left column: Pain Points & Desires */}
-        <div className="space-y-4">
-          <PainDesireList projectId={projectId} />
+      {/* 1. Audiences */}
+      <div className="space-y-4">
+        <AudienceList projectId={projectId} />
 
-          {painSuggestions.length > 0 && (
-            <PainDesireSuggestionsPanel
-              suggestions={painSuggestions}
-              type="pain"
-              onAccept={(s) => acceptPainDesire(s, "pain")}
-              onAcceptAll={(s) => acceptAllPainDesires(s, "pain")}
-              onDismissAll={() => setPainSuggestions([])}
-            />
-          )}
-
-          {desireSuggestions.length > 0 && (
-            <PainDesireSuggestionsPanel
-              suggestions={desireSuggestions}
-              type="desire"
-              onAccept={(s) => acceptPainDesire(s, "desire")}
-              onAcceptAll={(s) => acceptAllPainDesires(s, "desire")}
-              onDismissAll={() => setDesireSuggestions([])}
-            />
-          )}
-        </div>
-
-        {/* Right column: Audiences */}
-        <div className="space-y-4">
-          <AudienceList projectId={projectId} />
-
-          {audienceSuggestions.length > 0 && (
-            <AudienceSuggestionsPanel
-              suggestions={audienceSuggestions}
-              onAccept={acceptAudience}
-              onAcceptAll={acceptAllAudiences}
-              onDismissAll={() => setAudienceSuggestions([])}
-            />
-          )}
-        </div>
+        {audienceSuggestions.length > 0 && (
+          <AudienceSuggestionsPanel
+            suggestions={audienceSuggestions}
+            onAccept={acceptAudience}
+            onAcceptAll={acceptAllAudiences}
+            onDismissAll={() => setAudienceSuggestions([])}
+          />
+        )}
       </div>
 
-      {/* Connection matrix */}
+      {/* 2. Pain Points OR Desires — based on organizing approach */}
+      <div className="mt-10 pt-8 border-t space-y-4">
+        <PainDesireList projectId={projectId} type={approach} />
+
+        {approach === "pain" && painSuggestions.length > 0 && (
+          <PainDesireSuggestionsPanel
+            suggestions={painSuggestions}
+            type="pain"
+            onAccept={(s) => acceptPainDesire(s, "pain")}
+            onAcceptAll={(s) => acceptAllPainDesires(s, "pain")}
+            onDismissAll={() => setPainSuggestions([])}
+          />
+        )}
+
+        {approach === "desire" && desireSuggestions.length > 0 && (
+          <PainDesireSuggestionsPanel
+            suggestions={desireSuggestions}
+            type="desire"
+            onAccept={(s) => acceptPainDesire(s, "desire")}
+            onAcceptAll={(s) => acceptAllPainDesires(s, "desire")}
+            onDismissAll={() => setDesireSuggestions([])}
+          />
+        )}
+      </div>
+
+      {/* 3. Connections */}
       <div className="mt-10 pt-8 border-t">
         <PainDesireAudienceMatrix projectId={projectId} />
       </div>
