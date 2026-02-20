@@ -457,7 +457,7 @@ export function HooksBoard({ projectId, onAddHook }: HooksBoardProps) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto pb-4 min-h-[400px]">
+      <div className="flex gap-3 pb-4 min-h-[400px]">
         {hooksByStage.map((stage) => (
           <StageColumn
             key={stage.key}
@@ -514,7 +514,7 @@ function StageColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`flex-shrink-0 w-64 rounded-lg border ${stage.color} flex flex-col`}
+      className={`flex-1 min-w-0 rounded-lg border ${stage.color} flex flex-col`}
     >
       <div className="px-3 py-3 border-b border-inherit">
         <div className="flex items-center justify-between mb-0.5">
