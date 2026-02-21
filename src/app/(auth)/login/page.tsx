@@ -74,7 +74,7 @@ export default function LoginPage() {
           >
             flnt
             <svg width="14" height="44" viewBox="0 0 14 44" fill="none" aria-hidden="true">
-              <line x1="11" y1="2" x2="3" y2="42" stroke="#C8502A" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="11" y1="2" x2="3" y2="42" stroke="#C8502A" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </span>
         </div>
@@ -89,11 +89,12 @@ export default function LoginPage() {
               marginBottom: 20,
             }}
           >
-            Strike a spark.<br />
-            Make it <em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>multiply.</em>
+            Strike a <em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>spark.<br />
+              Leave a mark.
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,.5)", lineHeight: 1.6, maxWidth: 320 }}>
-            A framework for creative strategists who need more creative sparks, faster.
+            (Your clients deserve better than this. flnt helps.)<br> /
+              A systematic framework for creative strategists who'd rather not end up with landing page copy like the above.
           </p>
         </div>
 
