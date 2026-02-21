@@ -89,13 +89,11 @@ export default function LoginPage() {
               marginBottom: 20,
             }}
           >
-            Turn products<br />
-            into <em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>endless</em><br />
-            messaging angles.
+            Strike a spark.<br />
+            Make it <em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>multiply.</em>
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,.5)", lineHeight: 1.6, maxWidth: 320 }}>
-            A systematic framework for creative strategists who develop
-            direct response ads at scale.
+            A framework for creative strategists who need more creative sparks, faster.
           </p>
         </div>
 
@@ -123,10 +121,10 @@ export default function LoginPage() {
       >
         <div style={{ width: "100%", maxWidth: 380 }}>
           <h2 style={{ fontSize: 24, fontWeight: 600, color: "var(--ink)", marginBottom: 6, letterSpacing: "-.02em" }}>
-            Welcome back
+            Back to work.
           </h2>
           <p style={{ fontSize: 14, color: "var(--ink-2)", marginBottom: 32 }}>
-            Sign in to your workspace
+            Pick up where you left off.
           </p>
 
           {error && (
