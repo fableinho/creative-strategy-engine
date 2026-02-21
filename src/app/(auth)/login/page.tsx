@@ -89,12 +89,11 @@ export default function LoginPage() {
               marginBottom: 20,
             }}
           >
-            Strike a <em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>spark.<br />
-              Leave a mark.
+            Strike a spark.<br />
+            Make it{" "}<em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>multiply.</em>
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,.5)", lineHeight: 1.6, maxWidth: 320 }}>
-            Your clients deserve better than this. flnt helps.<br> /
-              A systematic framework for creative strategists who'd rather not end up with landing page copy like the above.
+            A framework for creative strategists who need more creative sparks, faster.
           </p>
         </div>
 
