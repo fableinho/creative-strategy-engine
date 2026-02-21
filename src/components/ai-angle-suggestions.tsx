@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useProjectStore } from "@/stores/project-store";
 import { Button } from "@/components/ui/button";
@@ -134,9 +135,10 @@ export function AiAngleSuggestions({
       <button
         onClick={handleGenerate}
         disabled={loading}
-        className="mt-2 w-full rounded-md border border-dashed border-violet-200 bg-violet-50/30 py-2 text-xs text-violet-500 hover:border-violet-400 hover:bg-violet-50 transition-colors disabled:text-gray-300 disabled:border-gray-200 disabled:bg-transparent"
+        className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-md bg-violet-600 py-2 text-xs font-semibold text-white hover:bg-violet-700 transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
       >
-        {loading ? "Generating angles..." : "AI Generate Angles"}
+        <Sparkles className="h-3.5 w-3.5" />
+        {loading ? "Generating angles..." : "Generate Angles with AI"}
       </button>
     );
   }
