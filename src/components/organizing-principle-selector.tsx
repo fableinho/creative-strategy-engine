@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useProjectStore } from "@/stores/project-store";
 
 interface AiRecommendation {
   recommendation: "pain" | "desire";
@@ -72,6 +73,7 @@ export function OrganizingPrincipleSelector({
   const [aiRecommendation, setAiRecommendation] =
     useState<AiRecommendation | null>(null);
   const router = useRouter();
+  const setOrganizingApproach = useProjectStore((s) => s.setOrganizingApproach);
 
   async function handleGetRecommendation() {
     if (!productDescription?.trim()) return;
@@ -133,6 +135,10 @@ export function OrganizingPrincipleSelector({
       .eq("id", projectId);
 
     if (!error) {
+      // Sync store immediately so Step 2 reads the correct approach
+      // without waiting for a re-hydrate (the hydrate guard skips re-fetching
+      // when the same project is already marked as hydrated).
+      setOrganizingApproach(selected);
       router.push(`/projects/${projectId}/pain-desires`);
     }
     setLoading(false);

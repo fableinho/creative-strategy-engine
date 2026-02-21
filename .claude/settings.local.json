@@ -6,7 +6,8 @@
       "Bash(npm i:*)",
       "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" log --oneline --all)",
       "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" show e0b2786 --name-only)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(ls:*)"
     ]
   }
 }

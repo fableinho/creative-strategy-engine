@@ -25,6 +25,7 @@ interface ProjectState {
   hydrate: (projectId: string) => Promise<void>;
   reset: () => void;
   setCurrentStep: (step: number) => void;
+  setOrganizingApproach: (approach: "pain" | "desire") => void;
   setAudiences: (audiences: Audience[]) => void;
   addAudience: (audience: Audience) => void;
   updateAudience: (id: string, data: Partial<Audience>) => void;
@@ -153,6 +154,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   reset: () => set(initialState),
 
   setCurrentStep: (step) => set({ currentStep: step }),
+  setOrganizingApproach: (approach) => set({ organizingApproach: approach }),
 
   setAudiences: (audiences) => set({ audiences }),
   addAudience: (audience) =>
