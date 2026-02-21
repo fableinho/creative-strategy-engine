@@ -168,6 +168,8 @@ export async function GET(request: NextRequest) {
 
   const briefHooks: BriefHook[] = hooks.map((hook) => {
     const angle = angleMap.get(hook.messaging_angle_id);
+    const pd = angle?.pain_desire_id ? painDesireMap.get(angle.pain_desire_id) : null;
+    const audience = angle?.audience_id ? audienceMap.get(angle.audience_id) : null;
     return {
       content: hook.content,
       type: hook.type,
@@ -175,6 +177,9 @@ export async function GET(request: NextRequest) {
       is_starred: hook.is_starred,
       is_ai_generated: hook.is_ai_generated,
       angleName: angle?.title ?? "Unknown Angle",
+      painDesireTitle: pd?.title ?? "Unknown",
+      painDesireType: (pd?.type ?? "pain") as "pain" | "desire",
+      audienceName: audience?.name ?? "Unknown",
     };
   });
 

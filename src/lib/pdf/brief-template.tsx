@@ -33,6 +33,9 @@ export interface BriefHook {
   is_starred: boolean;
   is_ai_generated: boolean;
   angleName: string;
+  painDesireTitle: string;
+  painDesireType: "pain" | "desire";
+  audienceName: string;
 }
 
 export interface BriefFormat {
@@ -76,6 +79,14 @@ const HOOK_TYPE_LABELS: Record<string, string> = {
   metaphor: "Metaphor",
 };
 
+const STAGE_ORDER = [
+  "unaware",
+  "problem_aware",
+  "solution_aware",
+  "product_aware",
+  "most_aware",
+] as const;
+
 const PRINCIPLE_LABELS: Record<string, string> = {
   brand: "Brand",
   campaign: "Campaign",
@@ -83,6 +94,16 @@ const PRINCIPLE_LABELS: Record<string, string> = {
   channel: "Channel",
   product: "Product",
   theme: "Theme",
+};
+
+// ─── Stage colours (cold → hot) ───────────────────────────────────────────────
+
+const STAGE_COLORS: Record<string, string> = {
+  unaware: "#9A958E",       // muted
+  problem_aware: "#C8912A", // amber
+  solution_aware: "#D4622A",// warm
+  product_aware: "#E11D48", // rose
+  most_aware: "#1A1814",    // obsidian
 };
 
 // ─── Brand colours ────────────────────────────────────────────────────────────
@@ -456,6 +477,66 @@ const s = StyleSheet.create({
     lineHeight: 1.6,
   },
 
+  // ── Funnel map ────────────────────────────────────────────────
+  funnelStage: {
+    marginBottom: 14,
+  },
+  funnelStageHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+    marginBottom: 8,
+  },
+  funnelStageDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 100,
+  },
+  funnelStageLabel: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  funnelStageLine: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: c.border,
+    marginTop: 3,
+  },
+  funnelAngleGroup: {
+    marginLeft: 14,
+    marginBottom: 8,
+  },
+  funnelAngleLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 5,
+    flexWrap: "wrap",
+  },
+  funnelAngleName: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    color: c.obsidian,
+  },
+  funnelAngleContext: {
+    fontSize: 7,
+    color: c.muted,
+    fontFamily: "Helvetica-Oblique",
+  },
+  funnelHookRow: {
+    borderLeftWidth: 2,
+    borderLeftColor: c.strike,
+    paddingLeft: 8,
+    marginBottom: 5,
+  },
+  funnelHookContent: {
+    fontSize: 9,
+    color: c.obsidian,
+    lineHeight: 1.5,
+  },
+
   // ── Misc ──────────────────────────────────────────────────────
   toneTag: {
     fontSize: 8,
@@ -637,6 +718,72 @@ function PainAudienceMatrix({
   );
 }
 
+// ─── Funnel Map section ───────────────────────────────────────────────────────
+
+function FunnelMapSection({ hooks }: { hooks: BriefHook[] }) {
+  const starredHooks = hooks.filter((h) => h.is_starred);
+  if (starredHooks.length === 0) return null;
+
+  // Build stage → angleName → BriefHook[] map
+  const stageMap: Record<string, Record<string, BriefHook[]>> = {};
+  for (const hook of starredHooks) {
+    const stage = hook.awareness_stage;
+    if (!stageMap[stage]) stageMap[stage] = {};
+    if (!stageMap[stage][hook.angleName]) stageMap[stage][hook.angleName] = [];
+    stageMap[stage][hook.angleName].push(hook);
+  }
+
+  const activeStages = STAGE_ORDER.filter((stage) => stageMap[stage]);
+  if (activeStages.length === 0) return null;
+
+  return (
+    <>
+      <SectionHeader label="Funnel Map" />
+      {activeStages.map((stage) => {
+        const angleGroups = stageMap[stage];
+        const stageColor = STAGE_COLORS[stage] ?? c.muted;
+        return (
+          <View key={stage} style={s.funnelStage}>
+            {/* Stage header */}
+            <View style={s.funnelStageHeader}>
+              <View style={[s.funnelStageDot, { backgroundColor: stageColor }]} />
+              <Text style={[s.funnelStageLabel, { color: stageColor }]}>
+                {STAGE_LABELS[stage] ?? stage}
+              </Text>
+              <View style={s.funnelStageLine} />
+            </View>
+
+            {/* Angle groups within this stage */}
+            {Object.entries(angleGroups).map(([angleName, angleHooks]) => {
+              const first = angleHooks[0];
+              return (
+                <View key={angleName} style={s.funnelAngleGroup}>
+                  {/* Angle label row */}
+                  <View style={s.funnelAngleLabelRow}>
+                    <PainDesireBadge type={first.painDesireType} />
+                    <Text style={s.funnelAngleName}>{angleName}</Text>
+                    <Text style={s.funnelAngleContext}>
+                      {first.painDesireTitle} × {first.audienceName}
+                    </Text>
+                  </View>
+
+                  {/* Starred hooks */}
+                  {angleHooks.map((hook, hi) => (
+                    <View key={hi} style={s.funnelHookRow}>
+                      <Text style={s.funnelHookContent}>{hook.content}</Text>
+                    </View>
+                  ))}
+                </View>
+              );
+            })}
+          </View>
+        );
+      })}
+      <View style={s.sectionGap} />
+    </>
+  );
+}
+
 // ─── Document ─────────────────────────────────────────────────────────────────
 
 export function BriefDocument({ data }: { data: BriefData }) {
@@ -757,6 +904,9 @@ export function BriefDocument({ data }: { data: BriefData }) {
           audienceIds={data.audienceIds}
           links={data.painAudienceLinks}
         />
+
+        {/* ── Funnel Map ── */}
+        <FunnelMapSection hooks={data.hooks} />
 
         {/* ── Audiences ── */}
         <SectionHeader label="Audiences" />
