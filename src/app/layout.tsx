@@ -1,26 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Jersey_10 } from "next/font/google";
+import { DM_Mono, Hahmlet } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
   subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const hahmlet = Hahmlet({
+  variable: "--font-hahmlet",
   subsets: ["latin"],
-});
-
-const jersey10 = Jersey_10({
-  variable: "--font-jersey-10",
-  subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "Creative Strategy Engine",
+  title: "flnt",
   description: "Turn products into endless messaging angles.",
 };
 
@@ -31,9 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jersey10.variable} antialiased`}
-      >
+      <body className={`${dmMono.variable} ${hahmlet.variable} antialiased`}>
         {children}
         <Analytics />
       </body>

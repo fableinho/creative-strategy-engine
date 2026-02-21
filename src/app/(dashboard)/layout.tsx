@@ -20,7 +20,7 @@ export default async function DashboardLayout({
         style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
           height: 52,
-          background: "rgba(250,250,248,.88)",
+          background: "rgba(245,242,236,.90)",
           backdropFilter: "blur(12px)",
           borderBottom: "1px solid var(--cse-border)",
           display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -29,23 +29,26 @@ export default async function DashboardLayout({
       >
         <Link
           href="/dashboard"
-          style={{
-            display: "flex", alignItems: "center", gap: 8,
-            fontWeight: 600, fontSize: 14, color: "var(--ink)",
-            textDecoration: "none",
-          }}
+          style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
         >
-          <div
+          <span
             style={{
-              width: 26, height: 26, borderRadius: 7,
-              background: "var(--ink)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "white", fontSize: 13,
+              fontFamily: "var(--font-hahmlet), serif",
+              fontWeight: 300,
+              fontSize: 22,
+              letterSpacing: "-0.04em",
+              color: "var(--ink)",
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              lineHeight: 1,
             }}
           >
-            ⚡
-          </div>
-          Creative Strategy Engine
+            flnt
+            <svg width="6" height="18" viewBox="0 0 6 18" fill="none" aria-hidden="true">
+              <line x1="4.5" y1="1" x2="1.5" y2="17" stroke="#C8502A" strokeWidth="1.8" strokeLinecap="round"/>
+            </svg>
+          </span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <span style={{ fontSize: 13, color: "var(--ink-2)" }}>{user.email}</span>

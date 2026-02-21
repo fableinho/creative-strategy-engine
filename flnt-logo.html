@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>flnt — Brand Identity</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Hahmlet:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F2EC;
+    --bg2: #EDE9E1;
+    --surface: #FFFFFF;
+    --ink: #1A1814;
+    --ink2: #4A4640;
+    --muted: #9A958E;
+    --strike: #C8502A;
+    --warm: #D4622A;
+    --amber: #C8912A;
+    --border: rgba(26,24,20,0.1);
+    --border2: rgba(26,24,20,0.06);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding: 72px 56px 96px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    max-width: 960px;
+    margin: 0 auto 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+  }
+
+  .header-left {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .header-right {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ── SECTION LABEL ── */
+  .label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 960px;
+    margin: 0 auto 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  /* THE WORDMARK */
+  .wordmark-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+
+  /* flnt wordmark: each letter is a drawn SVG letterform to get total control */
+  .wordmark-svg-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .flnt-text {
+    font-family: 'Hahmlet', serif;
+    font-weight: 300;
+    font-size: 120px;
+    letter-spacing: -0.05em;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  /* The spark — a single angular strike mark, like a flint chip */
+  .spark-mark {
+    position: relative;
+    top: -8px;
+  }
+
+  .tagline {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-left: 2px;
+  }
+
+  /* ── LOGO GRID ── */
+  .logo-grid {
+    max-width: 960px;
+    margin: 0 auto 72px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+  }
+
+  .logo-cell {
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+  }
+
+  .logo-cell.dark {
+    background: var(--ink);
+    border-color: transparent;
+  }
+
+  .logo-cell.mid {
+    background: var(--bg2);
+  }
+
+  .logo-cell-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .logo-cell.dark .logo-cell-label {
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* wordmark sizes */
+  .wm-lg { font-family: 'Hahmlet', serif; font-weight: 300; font-size: 64px; letter-spacing: -0.04em; color: var(--ink); line-height: 1; display: flex; align-items: center; gap: 10px; }
+  .wm-lg.light { color: #F5F2EC; }
+  .wm-md { font-family: 'Hahmlet', serif; font-weight: 300; font-size: 40px; letter-spacing: -0.04em; color: var(--ink); line-height: 1; display: flex; align-items: center; gap: 7px; }
+  .wm-sm { font-family: 'Hahmlet', serif; font-weight: 300; font-size: 24px; letter-spacing: -0.03em; color: var(--ink); line-height: 1; display: flex; align-items: center; gap: 5px; }
+
+  /* ── ICON MARK — square app icon ── */
+  .icon-showcase {
+    max-width: 960px;
+    margin: 0 auto 72px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+  }
+
+  .icon-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .icon-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── PALETTE ── */
+  .palette {
+    max-width: 960px;
+    margin: 0 auto 72px;
+  }
+
+  .swatches {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .swatch {
+    flex: 1;
+  }
+
+  .swatch-bar {
+    height: 80px;
+  }
+
+  .swatch-meta {
+    padding: 12px 14px;
+    background: var(--surface);
+    border-top: 1px solid var(--border2);
+  }
+
+  .swatch-name {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+    color: var(--ink2);
+  }
+
+  .swatch-hex {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .type-section {
+    max-width: 960px;
+    margin: 0 auto 72px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .type-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    padding: 36px;
+  }
+
+  .type-specimen {
+    font-family: 'Hahmlet', serif;
+    font-size: 48px;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .type-specimen-mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--ink2);
+    margin-bottom: 16px;
+  }
+
+  .type-meta {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── APP PREVIEW ── */
+  .app-preview {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .app-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: #111008;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .d1 { background: #FF5F57; }
+  .d2 { background: #FEBC2E; }
+  .d3 { background: #28C840; }
+
+  .url-bar {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border-radius: 5px;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  .app-content {
+    padding: 28px 32px 36px;
+  }
+
+  .app-topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+
+  .app-logo {
+    font-family: 'Hahmlet', serif;
+    font-weight: 300;
+    font-size: 22px;
+    letter-spacing: -0.03em;
+    color: #F5F2EC;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .app-nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+  }
+
+  .app-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    padding: 8px 18px;
+    border-radius: 4px;
+    background: var(--warm);
+    color: #fff;
+  }
+
+  .app-hero {
+    text-align: center;
+    padding: 24px 0 32px;
+  }
+
+  .app-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .app-h1 {
+    font-family: 'Hahmlet', serif;
+    font-weight: 300;
+    font-size: 40px;
+    letter-spacing: -0.04em;
+    color: #F5F2EC;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+
+  .app-h1 em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .app-sub {
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  /* Animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero, .logo-grid, .icon-showcase, .palette, .type-section, .app-preview {
+    animation: fadeUp 0.6s ease both;
+  }
+  .logo-grid     { animation-delay: 0.08s; }
+  .icon-showcase { animation-delay: 0.14s; }
+  .palette       { animation-delay: 0.20s; }
+  .type-section  { animation-delay: 0.26s; }
+  .app-preview   { animation-delay: 0.32s; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <span class="header-left">flnt — brand identity / 2026</span>
+  <span class="header-right">creative strategy engine</span>
+</div>
+
+<!-- HERO WORDMARK -->
+<div class="hero">
+  <div class="label">Primary Wordmark</div>
+  <div class="wordmark-wrap">
+    <div class="wordmark-svg-wrap">
+      <span class="flnt-text">flnt</span>
+      <!-- Spark strike: a single angular slash in warm orange -->
+      <svg class="spark-mark" width="18" height="56" viewBox="0 0 18 56" fill="none">
+        <line x1="14" y1="2" x2="4" y2="54" stroke="#C8502A" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="tagline">creative strategy engine</div>
+</div>
+
+<!-- LOGO GRID -->
+<div class="logo-grid">
+
+  <!-- White bg -->
+  <div class="logo-cell">
+    <span class="logo-cell-label">On white</span>
+    <div class="wm-lg">
+      flnt
+      <svg width="10" height="32" viewBox="0 0 10 32" fill="none">
+        <line x1="8" y1="1" x2="2" y2="31" stroke="#C8502A" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Dark bg -->
+  <div class="logo-cell dark">
+    <span class="logo-cell-label">On dark</span>
+    <div class="wm-lg light">
+      flnt
+      <svg width="10" height="32" viewBox="0 0 10 32" fill="none">
+        <line x1="8" y1="1" x2="2" y2="31" stroke="#D4622A" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Warm paper -->
+  <div class="logo-cell mid">
+    <span class="logo-cell-label">On paper</span>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="wm-md">
+        flnt
+        <svg width="7" height="22" viewBox="0 0 7 22" fill="none">
+          <line x1="5.5" y1="1" x2="1.5" y2="21" stroke="#C8502A" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="wm-sm">
+        flnt
+        <svg width="5" height="14" viewBox="0 0 5 14" fill="none">
+          <line x1="4" y1="1" x2="1" y2="13" stroke="#C8502A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ICON MARKS -->
+<div style="max-width:960px; margin: 0 auto 12px;"><div class="label">Icon Mark</div></div>
+<div class="icon-showcase">
+
+  <!-- 96px -->
+  <div class="icon-cell">
+    <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+      <rect width="96" height="96" rx="22" fill="#1A1814"/>
+      <text x="16" y="72" font-family="Hahmlet, serif" font-size="52" font-weight="300" fill="#F5F2EC" letter-spacing="-2">flnt</text>
+      <line x1="82" y1="14" x2="72" y2="82" stroke="#C8502A" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="icon-label">96px</span>
+  </div>
+
+  <!-- 64px -->
+  <div class="icon-cell">
+    <svg width="64" height="64" viewBox="0 0 96 96" fill="none">
+      <rect width="96" height="96" rx="22" fill="#1A1814"/>
+      <text x="16" y="72" font-family="Hahmlet, serif" font-size="52" font-weight="300" fill="#F5F2EC" letter-spacing="-2">flnt</text>
+      <line x1="82" y1="14" x2="72" y2="82" stroke="#C8502A" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="icon-label">64px</span>
+  </div>
+
+  <!-- 40px -->
+  <div class="icon-cell">
+    <svg width="40" height="40" viewBox="0 0 96 96" fill="none">
+      <rect width="96" height="96" rx="22" fill="#1A1814"/>
+      <text x="16" y="72" font-family="Hahmlet, serif" font-size="52" font-weight="300" fill="#F5F2EC" letter-spacing="-2">flnt</text>
+      <line x1="82" y1="14" x2="72" y2="82" stroke="#C8502A" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="icon-label">40px</span>
+  </div>
+
+  <!-- 24px -->
+  <div class="icon-cell">
+    <svg width="24" height="24" viewBox="0 0 96 96" fill="none">
+      <rect width="96" height="96" rx="22" fill="#1A1814"/>
+      <text x="16" y="72" font-family="Hahmlet, serif" font-size="52" font-weight="300" fill="#F5F2EC" letter-spacing="-2">flnt</text>
+      <line x1="82" y1="14" x2="72" y2="82" stroke="#C8502A" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="icon-label">24px</span>
+  </div>
+
+  <!-- Light version -->
+  <div class="icon-cell" style="margin-left:24px;">
+    <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+      <rect width="96" height="96" rx="22" fill="#F5F2EC" stroke="#E8E3D8" stroke-width="1"/>
+      <text x="16" y="72" font-family="Hahmlet, serif" font-size="52" font-weight="300" fill="#1A1814" letter-spacing="-2">flnt</text>
+      <line x1="82" y1="14" x2="72" y2="82" stroke="#C8502A" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="icon-label">Light</span>
+  </div>
+
+</div>
+
+<!-- PALETTE -->
+<div class="palette">
+  <div class="label">Colour</div>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="swatch-bar" style="background:#1A1814;"></div>
+      <div class="swatch-meta"><span class="swatch-name">Obsidian</span><span class="swatch-hex">#1A1814</span></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-bar" style="background:#C8502A;"></div>
+      <div class="swatch-meta"><span class="swatch-name">Strike</span><span class="swatch-hex">#C8502A</span></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-bar" style="background:#C8912A;"></div>
+      <div class="swatch-meta"><span class="swatch-name">Amber</span><span class="swatch-hex">#C8912A</span></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-bar" style="background:#F5F2EC;"></div>
+      <div class="swatch-meta"><span class="swatch-name">Paper</span><span class="swatch-hex">#F5F2EC</span></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-bar" style="background:#EDE9E1; border-top: 1px solid #ddd8cf;"></div>
+      <div class="swatch-meta"><span class="swatch-name">Linen</span><span class="swatch-hex">#EDE9E1</span></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-bar" style="background:#9A958E;"></div>
+      <div class="swatch-meta"><span class="swatch-name">Flint</span><span class="swatch-hex">#9A958E</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TYPE -->
+<div class="type-section">
+  <div class="type-card">
+    <div class="label">Display — Hahmlet Light</div>
+    <div class="type-specimen">One pain.<br>Every angle.</div>
+    <div class="type-meta">300 weight · −0.03em tracking</div>
+  </div>
+  <div class="type-card">
+    <div class="label">Mono — DM Mono Light</div>
+    <div class="type-specimen-mono">
+      The brief that used to take a day<br>
+      now takes under an hour. flnt maps<br>
+      every angle before you open a doc.
+    </div>
+    <div class="type-meta">300 weight · 1.7 leading · ui &amp; body</div>
+  </div>
+</div>
+
+<!-- APP PREVIEW -->
+<div class="app-preview">
+  <div class="app-bar">
+    <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+    <div class="url-bar">app.flnt.io/dashboard</div>
+  </div>
+  <div class="app-content">
+    <div class="app-topnav">
+      <div class="app-logo">
+        flnt
+        <svg width="7" height="20" viewBox="0 0 7 20" fill="none">
+          <line x1="5.5" y1="1" x2="1.5" y2="19" stroke="#C8502A" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="app-nav-links">
+        <span>projects</span>
+        <span>library</span>
+        <span>export</span>
+      </div>
+      <div class="app-btn">+ new project</div>
+    </div>
+    <div class="app-hero">
+      <div class="app-eyebrow">creative strategy engine</div>
+      <div class="app-h1">One product.<br><em>A hundred angles.</em></div>
+      <div class="app-sub">A systematic 5-step framework for generating direct response ad variations — built for agency creatives.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
