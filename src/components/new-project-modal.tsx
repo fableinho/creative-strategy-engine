@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Sparkles, Loader2 } from "lucide-react";
 
 interface Client {
   id: string;
@@ -36,6 +37,7 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [name, setName] = useState("");
@@ -51,6 +53,46 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
     setNewClientName("");
     setShowNewClient(clients.length === 0);
     setError(null);
+    setAiLoading(false);
+  }
+
+  // AI button is enabled once we have a project name + a client (either selected or typed)
+  const canGenerateAI =
+    name.trim().length > 0 &&
+    (showNewClient
+      ? newClientName.trim().length > 0
+      : selectedClientId.length > 0);
+
+  async function handleGenerateDescription() {
+    if (!canGenerateAI) return;
+    setAiLoading(true);
+    setError(null);
+
+    const clientName = showNewClient
+      ? newClientName.trim()
+      : (clients.find((c) => c.id === selectedClientId)?.name ?? "");
+
+    try {
+      const res = await fetch("/api/ai/generate-description", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectName: name.trim(), clientName }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Failed to generate description");
+      }
+
+      const { description: generated } = await res.json();
+      setDescription(generated);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Could not generate description"
+      );
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -200,14 +242,37 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Product / Service Description</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description">Product / Brand Description</Label>
+              <button
+                type="button"
+                onClick={handleGenerateDescription}
+                disabled={!canGenerateAI || aiLoading}
+                className="flex items-center gap-1.5 text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  color: canGenerateAI && !aiLoading ? "#C8502A" : undefined,
+                }}
+              >
+                {aiLoading ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                {aiLoading ? "Writing…" : "Write with AI"}
+              </button>
+            </div>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what you're marketing..."
+              placeholder="Describe the product or brand being marketed…"
               rows={3}
             />
+            {!canGenerateAI && (
+              <p className="text-xs text-gray-400">
+                Enter a project name and client first to enable AI writing.
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
@@ -218,7 +283,7 @@ export function NewProjectModal({ clients, children }: NewProjectModalProps) {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || aiLoading}>
               {loading ? "Creating..." : "Create Project"}
             </Button>
           </div>
