@@ -58,24 +58,25 @@ export default function LoginPage() {
         />
 
         {/* Logo */}
-        <div
-          style={{
-            display: "flex", alignItems: "center", gap: 10,
-            color: "white", fontWeight: 600, fontSize: 15,
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <div
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <span
             style={{
-              width: 32, height: 32, borderRadius: 9,
-              background: "rgba(255,255,255,.15)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 16,
+              fontFamily: "var(--font-hahmlet), serif",
+              fontWeight: 300,
+              fontSize: 52,
+              letterSpacing: "-0.04em",
+              color: "#F5F2EC",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              lineHeight: 1,
             }}
           >
-            ⚡
-          </div>
-          Creative Strategy Engine
+            flnt
+            <svg width="14" height="44" viewBox="0 0 14 44" fill="none" aria-hidden="true">
+              <line x1="11" y1="2" x2="3" y2="42" stroke="#C8502A" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
+          </span>
         </div>
 
         {/* Tagline */}
