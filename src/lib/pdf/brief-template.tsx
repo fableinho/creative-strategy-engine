@@ -39,9 +39,16 @@ export interface BriefHook {
 }
 
 export interface BriefFormat {
+  hookId: string;
   template_id: string | null;
   concept_notes: string | null;
   hookContent: string;
+  hookIsStarred: boolean;
+  hookAwarenessStage: string;
+  hookAngleName: string;
+  hookPainDesireType: "pain" | "desire";
+  hookPainDesireTitle: string;
+  hookAudienceName: string;
 }
 
 export interface BriefData {
@@ -106,6 +113,58 @@ const STAGE_COLORS: Record<string, string> = {
   most_aware: "#1A1814",    // obsidian
 };
 
+// ─── Format template lookups ──────────────────────────────────────────────────
+
+const TEMPLATE_LABELS: Record<string, string> = {
+  "story-origin": "Origin Story",
+  "story-customer-journey": "Customer Journey",
+  "story-day-in-life": "Day in the Life",
+  "story-unexpected-lesson": "Unexpected Lesson",
+  "story-open-loop": "Open Loop Narrative",
+  "ba-transformation": "Full Transformation",
+  "ba-side-by-side": "Side-by-Side Compare",
+  "ba-time-machine": "Time Machine",
+  "ba-metrics-shift": "Metrics Shift",
+  "ba-emotional-state": "Emotional State Change",
+  "founder-struggle": "The Struggle That Started It",
+  "founder-contrarian": "Contrarian Bet",
+  "founder-behind-scenes": "Behind the Scenes",
+  "founder-mission": "Mission Statement",
+  "uvt-old-way-new-way": "Old Way vs New Way",
+  "uvt-myth-buster": "Myth Buster",
+  "uvt-category-comparison": "Category Comparison",
+  "uvt-hidden-cost": "Hidden Cost Exposé",
+  "sp-testimonial-stack": "Testimonial Stack",
+  "sp-case-study-mini": "Mini Case Study",
+  "sp-social-surge": "Social Surge",
+  "sp-results-collage": "Results Collage",
+};
+
+const TEMPLATE_CATEGORY: Record<string, string> = {
+  "story-origin": "Storytelling",
+  "story-customer-journey": "Storytelling",
+  "story-day-in-life": "Storytelling",
+  "story-unexpected-lesson": "Storytelling",
+  "story-open-loop": "Storytelling",
+  "ba-transformation": "Before / After",
+  "ba-side-by-side": "Before / After",
+  "ba-time-machine": "Before / After",
+  "ba-metrics-shift": "Before / After",
+  "ba-emotional-state": "Before / After",
+  "founder-struggle": "Founder Story",
+  "founder-contrarian": "Founder Story",
+  "founder-behind-scenes": "Founder Story",
+  "founder-mission": "Founder Story",
+  "uvt-old-way-new-way": "Us vs Them",
+  "uvt-myth-buster": "Us vs Them",
+  "uvt-category-comparison": "Us vs Them",
+  "uvt-hidden-cost": "Us vs Them",
+  "sp-testimonial-stack": "Social Proof",
+  "sp-case-study-mini": "Social Proof",
+  "sp-social-surge": "Social Proof",
+  "sp-results-collage": "Social Proof",
+};
+
 // ─── Brand colours ────────────────────────────────────────────────────────────
 
 const c = {
@@ -126,6 +185,14 @@ const c = {
   gray400: "#9CA3AF",
   gray200: "#E5E7EB",
   gray50: "#F9FAFB",
+};
+
+const CATEGORY_COLORS: Record<string, string> = {
+  Storytelling: c.amber,
+  "Before / After": c.strike,
+  "Founder Story": c.obsidian,
+  "Us vs Them": c.rose,
+  "Social Proof": "#5E7A6F",
 };
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
@@ -537,6 +604,82 @@ const s = StyleSheet.create({
     lineHeight: 1.5,
   },
 
+  // ── Execution matrix ──────────────────────────────────────────
+  execHookBlock: {
+    borderWidth: 1,
+    borderColor: c.border,
+    borderRadius: 6,
+    overflow: "hidden",
+    marginBottom: 14,
+  },
+  execHookHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: c.linen,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    flexWrap: "wrap",
+    borderBottomWidth: 1,
+    borderBottomColor: c.border,
+  },
+  execAngleName: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    color: c.obsidian,
+  },
+  execAngleContext: {
+    fontSize: 7,
+    color: c.muted,
+    fontFamily: "Helvetica-Oblique",
+  },
+  execHookContent: {
+    fontSize: 9,
+    color: c.obsidian,
+    lineHeight: 1.55,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: c.border,
+  },
+  execFormatEntry: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: c.border,
+  },
+  execFormatEntryLast: {
+    borderBottomWidth: 0,
+  },
+  execFormatLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 5,
+  },
+  execCategoryTag: {
+    borderRadius: 3,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+  },
+  execCategoryTagText: {
+    fontSize: 6,
+    fontFamily: "Helvetica-Bold",
+    color: c.white,
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+  },
+  execTemplateName: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
+    color: c.ink2,
+  },
+  execFormatNotes: {
+    fontSize: 8.5,
+    color: c.ink2,
+    lineHeight: 1.6,
+  },
+
   // ── Misc ──────────────────────────────────────────────────────
   toneTag: {
     fontSize: 8,
@@ -784,6 +927,90 @@ function FunnelMapSection({ hooks }: { hooks: BriefHook[] }) {
   );
 }
 
+// ─── Execution Matrix section ─────────────────────────────────────────────────
+
+function ExecutionMatrixSection({ formats }: { formats: BriefFormat[] }) {
+  const withNotes = formats.filter((f) => f.concept_notes?.trim());
+  if (withNotes.length === 0) return null;
+
+  // Group by hookId, preserving first-encounter insertion order
+  const hookGroups = new Map<string, BriefFormat[]>();
+  for (const fmt of withNotes) {
+    if (!hookGroups.has(fmt.hookId)) hookGroups.set(fmt.hookId, []);
+    hookGroups.get(fmt.hookId)!.push(fmt);
+  }
+
+  // Sort hook groups by awareness stage (funnel order)
+  const stageIndex = Object.fromEntries(STAGE_ORDER.map((s, i) => [s, i]));
+  const sortedHookIds = [...hookGroups.keys()].sort((a, b) => {
+    const aStage = hookGroups.get(a)![0].hookAwarenessStage;
+    const bStage = hookGroups.get(b)![0].hookAwarenessStage;
+    return (stageIndex[aStage] ?? 99) - (stageIndex[bStage] ?? 99);
+  });
+
+  return (
+    <>
+      <SectionHeader label="Execution Matrix" />
+      {sortedHookIds.map((hookId) => {
+        const fmts = hookGroups.get(hookId)!;
+        const first = fmts[0];
+        const stageColor = STAGE_COLORS[first.hookAwarenessStage] ?? c.muted;
+
+        return (
+          <View key={hookId} style={s.execHookBlock}>
+            {/* Hook header: stage → pain/desire → angle → context */}
+            <View style={s.execHookHeader}>
+              <View style={[s.badge, { backgroundColor: stageColor + "22" }]}>
+                <Text style={[s.badgeText, { color: stageColor }]}>
+                  {STAGE_LABELS[first.hookAwarenessStage] ?? first.hookAwarenessStage}
+                </Text>
+              </View>
+              <PainDesireBadge type={first.hookPainDesireType} />
+              <Text style={s.execAngleName}>{first.hookAngleName}</Text>
+              <Text style={s.execAngleContext}>
+                · {first.hookPainDesireTitle} × {first.hookAudienceName}
+              </Text>
+            </View>
+
+            {/* Hook content */}
+            <Text style={s.execHookContent}>
+              {first.hookIsStarred ? "★  " : ""}{first.hookContent}
+            </Text>
+
+            {/* Format executions */}
+            {fmts.map((fmt, fi) => {
+              const isLast = fi === fmts.length - 1;
+              const templateName = fmt.template_id
+                ? (TEMPLATE_LABELS[fmt.template_id] ?? fmt.template_id)
+                : "Unknown Format";
+              const category = fmt.template_id
+                ? (TEMPLATE_CATEGORY[fmt.template_id] ?? "Other")
+                : "Other";
+              const catColor = CATEGORY_COLORS[category] ?? c.muted;
+
+              return (
+                <View
+                  key={fi}
+                  style={isLast ? [s.execFormatEntry, s.execFormatEntryLast] : s.execFormatEntry}
+                >
+                  <View style={s.execFormatLabelRow}>
+                    <View style={[s.execCategoryTag, { backgroundColor: catColor }]}>
+                      <Text style={s.execCategoryTagText}>{category}</Text>
+                    </View>
+                    <Text style={s.execTemplateName}>{templateName}</Text>
+                  </View>
+                  <Text style={s.execFormatNotes}>{fmt.concept_notes}</Text>
+                </View>
+              );
+            })}
+          </View>
+        );
+      })}
+      <View style={s.sectionGap} />
+    </>
+  );
+}
+
 // ─── Document ─────────────────────────────────────────────────────────────────
 
 export function BriefDocument({ data }: { data: BriefData }) {
@@ -808,8 +1035,6 @@ export function BriefDocument({ data }: { data: BriefData }) {
     },
     {}
   );
-
-  const formatsWithNotes = data.formats.filter((f) => f.concept_notes?.trim());
 
   const totalAngles = data.angles.length;
   const totalHooks = data.hooks.length;
@@ -1024,27 +1249,8 @@ export function BriefDocument({ data }: { data: BriefData }) {
           ))
         )}
 
-        {/* ── Format Concepts ── */}
-        {formatsWithNotes.length > 0 && (
-          <>
-            <View style={s.sectionGap} />
-            <SectionHeader label="Format Concepts" />
-            {formatsWithNotes.map((f, i) => (
-              <View key={i} style={s.formatEntry}>
-                <Text style={s.formatHookRef}>
-                  Hook: &ldquo;{f.hookContent.slice(0, 100)}
-                  {f.hookContent.length > 100 ? "…" : ""}&rdquo;
-                </Text>
-                {f.template_id && (
-                  <Text style={[s.cardTitle, { marginBottom: 4, fontSize: 9 }]}>
-                    {f.template_id}
-                  </Text>
-                )}
-                <Text style={s.formatNotes}>{f.concept_notes}</Text>
-              </View>
-            ))}
-          </>
-        )}
+        {/* ── Execution Matrix ── */}
+        <ExecutionMatrixSection formats={data.formats} />
 
       </Page>
     </Document>

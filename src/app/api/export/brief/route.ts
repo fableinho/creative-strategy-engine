@@ -185,10 +185,20 @@ export async function GET(request: NextRequest) {
 
   const briefFormats: BriefFormat[] = formats.map((fe) => {
     const hook = hookMap.get(fe.hook_id);
+    const angle = hook ? angleMap.get(hook.messaging_angle_id) : null;
+    const pd = angle?.pain_desire_id ? painDesireMap.get(angle.pain_desire_id) : null;
+    const audience = angle?.audience_id ? audienceMap.get(angle.audience_id) : null;
     return {
+      hookId: fe.hook_id,
       template_id: fe.template_id,
       concept_notes: fe.concept_notes,
       hookContent: hook?.content ?? "",
+      hookIsStarred: hook?.is_starred ?? false,
+      hookAwarenessStage: hook?.awareness_stage ?? "",
+      hookAngleName: angle?.title ?? "Unknown Angle",
+      hookPainDesireType: (pd?.type ?? "pain") as "pain" | "desire",
+      hookPainDesireTitle: pd?.title ?? "Unknown",
+      hookAudienceName: audience?.name ?? "Unknown",
     };
   });
 
