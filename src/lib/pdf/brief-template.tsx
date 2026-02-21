@@ -65,6 +65,8 @@ export interface BriefData {
   angles: BriefAngle[];
   hooks: BriefHook[];
   formats: BriefFormat[];
+  /** Section keys to render; all sections rendered when absent. */
+  includedSections: string[];
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -1014,6 +1016,7 @@ function ExecutionMatrixSection({ formats }: { formats: BriefFormat[] }) {
 // ─── Document ─────────────────────────────────────────────────────────────────
 
 export function BriefDocument({ data }: { data: BriefData }) {
+  const has = (key: string) => data.includedSections.includes(key);
   const painsOnly = data.painDesires.filter((p) => p.type === "pain");
   const desiresOnly = data.painDesires.filter((p) => p.type === "desire");
 
@@ -1117,140 +1120,159 @@ export function BriefDocument({ data }: { data: BriefData }) {
         <View style={s.coverDivider} />
 
         {/* ── Organizing Principle ── */}
-        <OrganizingPrincipleSection
-          principle={data.organizingPrinciple}
-          rationale={data.principleRationale}
-          approach={data.organizingApproach}
-        />
+        {has("organizingPrinciple") && (
+          <OrganizingPrincipleSection
+            principle={data.organizingPrinciple}
+            rationale={data.principleRationale}
+            approach={data.organizingApproach}
+          />
+        )}
 
         {/* ── Pain–Audience Map ── */}
-        <PainAudienceMatrix
-          painDesires={data.painDesires}
-          audienceIds={data.audienceIds}
-          links={data.painAudienceLinks}
-        />
+        {has("painAudienceMap") && (
+          <PainAudienceMatrix
+            painDesires={data.painDesires}
+            audienceIds={data.audienceIds}
+            links={data.painAudienceLinks}
+          />
+        )}
 
         {/* ── Funnel Map ── */}
-        <FunnelMapSection hooks={data.hooks} />
+        {has("funnelMap") && <FunnelMapSection hooks={data.hooks} />}
 
         {/* ── Audiences ── */}
-        <SectionHeader label="Audiences" />
-        {data.audiences.length === 0 ? (
-          <Text style={s.emptyText}>No audiences defined.</Text>
-        ) : (
-          data.audiences.map((a, i) => (
-            <View key={i} style={s.card}>
-              <Text style={s.cardTitle}>{a.name}</Text>
-              {a.description && <Text style={s.cardBody}>{a.description}</Text>}
-            </View>
-          ))
-        )}
-        <View style={s.sectionGap} />
-
-        {/* ── Pain Points ── */}
-        {painsOnly.length > 0 && (
+        {has("audiences") && (
           <>
-            <SectionHeader label="Pain Points" />
-            {painsOnly.map((p, i) => (
-              <View key={i} style={s.card}>
-                <PainDesireBadge type="pain" />
-                <Text style={s.cardTitle}>{p.title}</Text>
-                {p.description && <Text style={s.cardBody}>{p.description}</Text>}
-                {p.intensity != null && (
-                  <Text style={[s.cardBody, { marginTop: 3 }]}>
-                    Intensity: {p.intensity}/10
-                  </Text>
-                )}
-              </View>
-            ))}
-            <View style={s.sectionGap} />
-          </>
-        )}
-
-        {/* ── Desires ── */}
-        {desiresOnly.length > 0 && (
-          <>
-            <SectionHeader label="Desires" />
-            {desiresOnly.map((d, i) => (
-              <View key={i} style={s.card}>
-                <PainDesireBadge type="desire" />
-                <Text style={s.cardTitle}>{d.title}</Text>
-                {d.description && <Text style={s.cardBody}>{d.description}</Text>}
-              </View>
-            ))}
-            <View style={s.sectionGap} />
-          </>
-        )}
-
-        {/* ── Messaging Angles ── */}
-        <SectionHeader label="Messaging Angles" />
-        {data.angles.length === 0 ? (
-          <Text style={s.emptyText}>No messaging angles yet.</Text>
-        ) : (
-          Object.entries(angleGroups).map(([key, angles], gi) => {
-            const first = angles[0];
-            return (
-              <View key={gi} style={{ marginBottom: 12 }}>
-                <View style={s.intersectionHeader}>
-                  <PainDesireBadge type={first.painDesireType} />
-                  <Text style={s.intersectionTitle}>{first.painDesireTitle}</Text>
-                  <Text style={s.intersectionSep}>×</Text>
-                  <Text style={s.intersectionAudience}>{first.audienceName}</Text>
+            <SectionHeader label="Audiences" />
+            {data.audiences.length === 0 ? (
+              <Text style={s.emptyText}>No audiences defined.</Text>
+            ) : (
+              data.audiences.map((a, i) => (
+                <View key={i} style={s.card}>
+                  <Text style={s.cardTitle}>{a.name}</Text>
+                  {a.description && <Text style={s.cardBody}>{a.description}</Text>}
                 </View>
-                {angles.map((angle, ai) => (
-                  <View key={ai} style={[s.card, { marginLeft: 8 }]}>
-                    <Text style={s.cardTitle}>{angle.title}</Text>
-                    {angle.description && (
-                      <Text style={s.cardBody}>{angle.description}</Text>
-                    )}
-                    {angle.tone && (
-                      <Text style={[s.toneTag, { marginTop: 4 }]}>
-                        tone: {angle.tone}
+              ))
+            )}
+            <View style={s.sectionGap} />
+          </>
+        )}
+
+        {/* ── Pain Points & Desires ── */}
+        {has("painDesires") && (
+          <>
+            {painsOnly.length > 0 && (
+              <>
+                <SectionHeader label="Pain Points" />
+                {painsOnly.map((p, i) => (
+                  <View key={i} style={s.card}>
+                    <PainDesireBadge type="pain" />
+                    <Text style={s.cardTitle}>{p.title}</Text>
+                    {p.description && <Text style={s.cardBody}>{p.description}</Text>}
+                    {p.intensity != null && (
+                      <Text style={[s.cardBody, { marginTop: 3 }]}>
+                        Intensity: {p.intensity}/10
                       </Text>
                     )}
                   </View>
                 ))}
-              </View>
-            );
-          })
+                <View style={s.sectionGap} />
+              </>
+            )}
+            {desiresOnly.length > 0 && (
+              <>
+                <SectionHeader label="Desires" />
+                {desiresOnly.map((d, i) => (
+                  <View key={i} style={s.card}>
+                    <PainDesireBadge type="desire" />
+                    <Text style={s.cardTitle}>{d.title}</Text>
+                    {d.description && <Text style={s.cardBody}>{d.description}</Text>}
+                  </View>
+                ))}
+                <View style={s.sectionGap} />
+              </>
+            )}
+          </>
         )}
-        <View style={s.sectionGap} />
+
+        {/* ── Messaging Angles ── */}
+        {has("messagingAngles") && (
+          <>
+            <SectionHeader label="Messaging Angles" />
+            {data.angles.length === 0 ? (
+              <Text style={s.emptyText}>No messaging angles yet.</Text>
+            ) : (
+              Object.entries(angleGroups).map(([key, angles], gi) => {
+                const first = angles[0];
+                return (
+                  <View key={gi} style={{ marginBottom: 12 }}>
+                    <View style={s.intersectionHeader}>
+                      <PainDesireBadge type={first.painDesireType} />
+                      <Text style={s.intersectionTitle}>{first.painDesireTitle}</Text>
+                      <Text style={s.intersectionSep}>×</Text>
+                      <Text style={s.intersectionAudience}>{first.audienceName}</Text>
+                    </View>
+                    {angles.map((angle, ai) => (
+                      <View key={ai} style={[s.card, { marginLeft: 8 }]}>
+                        <Text style={s.cardTitle}>{angle.title}</Text>
+                        {angle.description && (
+                          <Text style={s.cardBody}>{angle.description}</Text>
+                        )}
+                        {angle.tone && (
+                          <Text style={[s.toneTag, { marginTop: 4 }]}>
+                            tone: {angle.tone}
+                          </Text>
+                        )}
+                      </View>
+                    ))}
+                  </View>
+                );
+              })
+            )}
+            <View style={s.sectionGap} />
+          </>
+        )}
 
         {/* ── Hooks ── */}
-        <SectionHeader label="Hooks" />
-        {data.hooks.length === 0 ? (
-          <Text style={s.emptyText}>No hooks yet.</Text>
-        ) : (
-          Object.entries(hookGroups).map(([angleName, hooks], gi) => (
-            <View key={gi} style={{ marginBottom: 14 }}>
-              <Text style={[s.cardTitle, { marginBottom: 6, color: c.muted }]}>
-                {angleName}
-              </Text>
-              {hooks.map((hook, hi) => (
-                <View
-                  key={hi}
-                  style={hook.is_starred ? [s.hookRow, s.hookRowStarred] : s.hookRow}
-                >
-                  <Text style={s.hookContent}>{hook.content}</Text>
-                  <View style={s.hookMeta}>
-                    <HookTypeBadge label={HOOK_TYPE_LABELS[hook.type] ?? hook.type} />
-                    <StageBadge
-                      label={STAGE_LABELS[hook.awareness_stage] ?? hook.awareness_stage}
-                    />
-                    {hook.is_starred && (
-                      <View style={[s.badge, { backgroundColor: c.strikeLight }]}>
-                        <Text style={[s.badgeText, { color: c.strike }]}>★ Starred</Text>
+        {has("hooks") && (
+          <>
+            <SectionHeader label="Hooks" />
+            {data.hooks.length === 0 ? (
+              <Text style={s.emptyText}>No hooks yet.</Text>
+            ) : (
+              Object.entries(hookGroups).map(([angleName, hooks], gi) => (
+                <View key={gi} style={{ marginBottom: 14 }}>
+                  <Text style={[s.cardTitle, { marginBottom: 6, color: c.muted }]}>
+                    {angleName}
+                  </Text>
+                  {hooks.map((hook, hi) => (
+                    <View
+                      key={hi}
+                      style={hook.is_starred ? [s.hookRow, s.hookRowStarred] : s.hookRow}
+                    >
+                      <Text style={s.hookContent}>{hook.content}</Text>
+                      <View style={s.hookMeta}>
+                        <HookTypeBadge label={HOOK_TYPE_LABELS[hook.type] ?? hook.type} />
+                        <StageBadge
+                          label={STAGE_LABELS[hook.awareness_stage] ?? hook.awareness_stage}
+                        />
+                        {hook.is_starred && (
+                          <View style={[s.badge, { backgroundColor: c.strikeLight }]}>
+                            <Text style={[s.badgeText, { color: c.strike }]}>★ Starred</Text>
+                          </View>
+                        )}
                       </View>
-                    )}
-                  </View>
+                    </View>
+                  ))}
                 </View>
-              ))}
-            </View>
-          ))
+              ))
+            )}
+            <View style={s.sectionGap} />
+          </>
         )}
 
         {/* ── Execution Matrix ── */}
-        <ExecutionMatrixSection formats={data.formats} />
+        {has("executionMatrix") && <ExecutionMatrixSection formats={data.formats} />}
 
       </Page>
     </Document>

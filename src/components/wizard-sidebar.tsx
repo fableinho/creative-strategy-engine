@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { ExportBriefModal } from "@/components/export-brief-modal";
 
 export const WIZARD_STEPS = [
   { key: "audiences",    label: "Creative Approach",  href: "" },
@@ -129,7 +130,7 @@ export function WizardSidebar({
       </div>
 
       {/* Steps nav */}
-      <nav style={{ padding: "0 12px" }}>
+      <nav style={{ padding: "0 12px", flex: 1 }}>
         {WIZARD_STEPS.map((step, i) => {
           const stepPath = `${basePath}${step.href}`;
           const isActive =
@@ -198,6 +199,16 @@ export function WizardSidebar({
           );
         })}
       </nav>
+
+      {/* Export footer */}
+      <div
+        style={{
+          padding: "12px 16px",
+          borderTop: "1px solid var(--cse-border)",
+        }}
+      >
+        <ExportBriefModal projectId={projectId} />
+      </div>
     </aside>
   );
 }

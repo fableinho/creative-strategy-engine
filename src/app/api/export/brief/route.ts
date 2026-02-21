@@ -12,6 +12,17 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const ALL_SECTION_KEYS = [
+  "organizingPrinciple",
+  "painAudienceMap",
+  "funnelMap",
+  "audiences",
+  "painDesires",
+  "messagingAngles",
+  "hooks",
+  "executionMatrix",
+];
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId");
@@ -19,6 +30,11 @@ export async function GET(request: NextRequest) {
   if (!projectId) {
     return NextResponse.json({ error: "projectId is required" }, { status: 400 });
   }
+
+  const sectionsParam = searchParams.get("sections");
+  const includedSections = sectionsParam
+    ? sectionsParam.split(",").map((s) => s.trim()).filter(Boolean)
+    : ALL_SECTION_KEYS;
 
   const supabase = await createClient();
 
@@ -229,6 +245,7 @@ export async function GET(request: NextRequest) {
     angles: briefAngles,
     hooks: briefHooks,
     formats: briefFormats,
+    includedSections,
   };
 
   // ── 6. Render PDF ─────────────────────────────────────────────────────────────
