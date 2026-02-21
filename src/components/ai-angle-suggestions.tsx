@@ -135,7 +135,7 @@ export function AiAngleSuggestions({
       <button
         onClick={handleGenerate}
         disabled={loading}
-        className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-md bg-violet-600 py-2 text-xs font-semibold text-white hover:bg-violet-700 transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700 transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
       >
         <Sparkles className="h-3.5 w-3.5" />
         {loading ? "Generating angles..." : "Generate Angles with AI"}
