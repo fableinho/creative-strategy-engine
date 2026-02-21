@@ -30,10 +30,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // ── Fetch project (verify ownership) ────────────────────────────────────────
+  // ── 1. Fetch project (verify ownership) ──────────────────────────────────────
   const { data: projectData, error: projectError } = await supabase
     .from("projects")
-    .select("id, name, description")
+    .select("id, name, description, organizing_principle, principle_rationale, metadata")
     .eq("id", projectId)
     .eq("owner_id", user.id)
     .single();
@@ -42,9 +42,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  const project = projectData as { id: string; name: string; description: string | null };
+  const project = projectData as {
+    id: string;
+    name: string;
+    description: string | null;
+    organizing_principle: string | null;
+    principle_rationale: string | null;
+    metadata: { organizing_approach?: string; current_step?: number } | null;
+  };
 
-  // ── Fetch audiences & pain/desires in parallel ───────────────────────────────
+  // ── 2. First parallel batch: audiences, pain/desires, angles ──────────────────
   const [audiencesRes, painDesiresRes, anglesRes] = await Promise.all([
     supabase
       .from("audiences")
@@ -87,8 +94,32 @@ export async function GET(request: NextRequest) {
     is_ai_generated: boolean;
   }[];
 
-  // ── Fetch hooks (via angle IDs) ──────────────────────────────────────────────
-  let hooks: {
+  // ── 3. Second parallel batch: links + hooks (needs IDs from batch 1) ──────────
+  const painDesireIds = painDesires.map((p) => p.id);
+  const angleIds = angles.map((a) => a.id);
+
+  const [linksRes, hooksRes] = await Promise.all([
+    painDesireIds.length > 0
+      ? supabase
+          .from("pain_desire_audiences")
+          .select("pain_desire_id, audience_id")
+          .in("pain_desire_id", painDesireIds)
+      : Promise.resolve({ data: [] }),
+    angleIds.length > 0
+      ? supabase
+          .from("hooks")
+          .select("id, messaging_angle_id, content, type, awareness_stage, is_starred, is_ai_generated")
+          .in("messaging_angle_id", angleIds)
+          .order("sort_order")
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const painAudienceLinks = (linksRes.data ?? []) as {
+    pain_desire_id: string;
+    audience_id: string;
+  }[];
+
+  const hooks = (hooksRes.data ?? []) as {
     id: string;
     messaging_angle_id: string;
     content: string;
@@ -96,19 +127,9 @@ export async function GET(request: NextRequest) {
     awareness_stage: string;
     is_starred: boolean;
     is_ai_generated: boolean;
-  }[] = [];
+  }[];
 
-  if (angles.length > 0) {
-    const angleIds = angles.map((a) => a.id);
-    const { data: hooksData } = await supabase
-      .from("hooks")
-      .select("id, messaging_angle_id, content, type, awareness_stage, is_starred, is_ai_generated")
-      .in("messaging_angle_id", angleIds)
-      .order("sort_order");
-    hooks = (hooksData ?? []) as typeof hooks;
-  }
-
-  // ── Fetch format executions (via hook IDs) ───────────────────────────────────
+  // ── 4. Third batch: format executions (needs hook IDs) ────────────────────────
   let formats: {
     hook_id: string;
     template_id: string | null;
@@ -125,9 +146,7 @@ export async function GET(request: NextRequest) {
     formats = (formatsData ?? []) as typeof formats;
   }
 
-  // ── Assemble brief data ──────────────────────────────────────────────────────
-
-  // Build lookup maps
+  // ── 5. Assemble brief data ────────────────────────────────────────────────────
   const audienceMap = new Map(audiences.map((a) => [a.id, a]));
   const painDesireMap = new Map(painDesires.map((p) => [p.id, p]));
   const angleMap = new Map(angles.map((a) => [a.id, a]));
@@ -178,23 +197,26 @@ export async function GET(request: NextRequest) {
   const briefData: BriefData = {
     projectName: project.name,
     projectDescription: project.description,
+    organizingPrinciple: project.organizing_principle,
+    principleRationale: project.principle_rationale,
+    organizingApproach: project.metadata?.organizing_approach ?? null,
     generatedAt,
-    audiences: audiences.map((a) => ({
-      name: a.name,
-      description: a.description,
-    })),
+    audiences: audiences.map((a) => ({ name: a.name, description: a.description })),
     painDesires: painDesires.map((p) => ({
+      id: p.id,
       type: p.type,
       title: p.title,
       description: p.description,
       intensity: p.intensity,
     })),
+    audienceIds: audiences.map((a) => ({ id: a.id, name: a.name })),
+    painAudienceLinks,
     angles: briefAngles,
     hooks: briefHooks,
     formats: briefFormats,
   };
 
-  // ── Render PDF ───────────────────────────────────────────────────────────────
+  // ── 6. Render PDF ─────────────────────────────────────────────────────────────
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const buffer = await renderToBuffer(
