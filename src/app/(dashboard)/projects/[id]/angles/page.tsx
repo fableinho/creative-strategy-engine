@@ -28,7 +28,7 @@ export default function AnglesPage() {
   const messagingAngles = useProjectStore((s) => s.messagingAngles);
   const addMessagingAngle = useProjectStore((s) => s.addMessagingAngle);
 
-  const [viewMode, setViewMode] = useState<ViewMode>("cards");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   // Add angle dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
