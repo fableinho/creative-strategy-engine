@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useProjectStore } from "@/stores/project-store";
 import { createClient } from "@/lib/supabase/client";
 import { IntersectionCard } from "@/components/intersection-card";
+import { AngleListView } from "@/components/angle-list-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +16,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+type ViewMode = "cards" | "list";
+
 export default function AnglesPage() {
   const params = useParams();
   const projectId = params.id as string;
@@ -24,6 +27,8 @@ export default function AnglesPage() {
   const links = useProjectStore((s) => s.painDesireAudiences);
   const messagingAngles = useProjectStore((s) => s.messagingAngles);
   const addMessagingAngle = useProjectStore((s) => s.addMessagingAngle);
+
+  const [viewMode, setViewMode] = useState<ViewMode>("cards");
 
   // Add angle dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -98,12 +103,39 @@ export default function AnglesPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-1">Messaging Angles</h1>
-        <p className="text-gray-500 text-sm">
-          Each card represents a pain/desire × audience intersection. Add
-          messaging angles to each combination.
-        </p>
+      <div className="flex items-start justify-between mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold mb-1">Messaging Angles</h1>
+          <p className="text-gray-500 text-sm">
+            Each section represents a pain/desire × audience intersection. Add
+            messaging angles to each combination.
+          </p>
+        </div>
+
+        {intersections.length > 0 && (
+          <div className="flex items-center rounded-md border bg-white p-0.5 shrink-0">
+            <button
+              onClick={() => setViewMode("cards")}
+              className={`rounded px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                viewMode === "cards"
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Cards
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`rounded px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                viewMode === "list"
+                  ? "bg-gray-900 text-white"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              List
+            </button>
+          </div>
+        )}
       </div>
 
       {intersections.length === 0 ? (
@@ -114,6 +146,12 @@ export default function AnglesPage() {
             to unlock messaging angles.
           </p>
         </div>
+      ) : viewMode === "list" ? (
+        <AngleListView
+          projectId={projectId}
+          intersections={intersections}
+          onAddAngle={handleOpenAddAngle}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {intersections.map((intersection) => (

@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npx tsc:*)",
       "Bash(wc:*)",
-      "Bash(npm i:*)"
+      "Bash(npm i:*)",
+      "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" log --oneline --all)",
+      "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" show e0b2786 --name-only)"
     ]
   }
 }
