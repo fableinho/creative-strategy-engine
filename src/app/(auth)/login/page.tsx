@@ -82,7 +82,7 @@ export default function LoginPage() {
         <div style={{ position: "relative", zIndex: 1 }}>
           <h1
             style={{
-              fontFamily: "var(--font-instrument-serif), Georgia, serif",
+              fontFamily: "var(--font-jersey-10), sans-serif",
               fontSize: 44, lineHeight: 1.1,
               color: "white", letterSpacing: "-.02em",
               marginBottom: 20,

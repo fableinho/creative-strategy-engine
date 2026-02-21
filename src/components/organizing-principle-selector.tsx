@@ -152,7 +152,7 @@ export function OrganizingPrincipleSelector({
         </div>
         <h1
           style={{
-            fontFamily: "var(--font-instrument-serif), Georgia, serif",
+            fontFamily: "var(--font-jersey-10), sans-serif",
             fontSize: 38, color: "var(--ink)",
             letterSpacing: "-.02em", lineHeight: 1.15, marginBottom: 12,
           }}
