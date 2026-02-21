@@ -201,7 +201,7 @@ export default function HooksPage() {
     <div>
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Hooks</h1>
+          <h1 className="text-2xl font-bold mb-1 font-display">Hooks</h1>
           <p className="text-gray-500 text-sm">
             Create hooks for each awareness stage. Move prospects through
             Unaware → Most Aware with targeted messaging.

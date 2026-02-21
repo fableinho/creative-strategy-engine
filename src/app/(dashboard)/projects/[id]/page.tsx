@@ -42,7 +42,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-2">{project.name}</h1>
+      <h1 className="text-2xl font-bold mb-2 font-display">{project.name}</h1>
       {project.description && (
         <p className="text-gray-500 mb-6">{project.description}</p>
       )}

@@ -105,7 +105,7 @@ export default function AnglesPage() {
     <div>
       <div className="flex items-start justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Messaging Angles</h1>
+          <h1 className="text-2xl font-bold mb-1 font-display">Messaging Angles</h1>
           <p className="text-gray-500 text-sm">
             Each section represents a pain/desire × audience intersection. Add
             messaging angles to each combination.
