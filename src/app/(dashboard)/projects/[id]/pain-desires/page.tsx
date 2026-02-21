@@ -165,7 +165,7 @@ export default function PainDesiresPage() {
     <div>
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold mb-1 font-display">Pain Points & Desires</h1>
+          <h1 className="text-[38px] font-bold mb-1 font-display">Pain Points & Desires</h1>
           <p className="text-gray-500 text-sm">
             Map your audience&apos;s pain points and desires. These will fuel
             your messaging angles in the next step.

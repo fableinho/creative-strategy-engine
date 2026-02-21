@@ -158,7 +158,7 @@ export default function FormatsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-1 font-display">Format Executions</h1>
+        <h1 className="text-[38px] font-bold mb-1 font-display">Format Executions</h1>
         <p className="text-gray-500 text-sm">
           For each starred hook, select creative formats and generate concept
           outlines. Each format defines a narrative structure for turning hooks
