@@ -93,7 +93,7 @@ export default function LoginPage() {
               Leave a mark.
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,.5)", lineHeight: 1.6, maxWidth: 320 }}>
-            (Your clients deserve better than this. flnt helps.)<br> /
+            Your clients deserve better than this. flnt helps.<br> /
               A systematic framework for creative strategists who'd rather not end up with landing page copy like the above.
           </p>
         </div>
