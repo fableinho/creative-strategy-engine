@@ -93,7 +93,8 @@ export default function LoginPage() {
             Leave a {" "}<em style={{ fontStyle: "italic", color: "rgba(255,255,255,.55)" }}>mark.</em>
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,.5)", lineHeight: 1.6, maxWidth: 420 }}>
-            Your clients deserve better than this. flnt helps.<br /><br />
+            Your clients deserve better than this.<br />
+            flnt helps.<br /><br />
             A systematic framework for creative strategists who'd rather not end up with landing page copy like the above.
           </p>
         </div>
