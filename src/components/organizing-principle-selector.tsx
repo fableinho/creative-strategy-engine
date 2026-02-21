@@ -26,8 +26,8 @@ const PRINCIPLES = [
       color: "var(--cse-red)",
       border: "1px solid var(--cse-red-border)",
     },
-    title: "Start with what hurts",
-    subtitle: "Lead with the problem",
+    title: "Lead with the ache.",
+    subtitle: "Problem first. Product second.",
     description:
       "People are actively searching for a solution to a specific, felt problem. They know something is wrong — they just need the fix.",
     question: '"What problem are people Googling right now?"',
@@ -47,8 +47,8 @@ const PRINCIPLES = [
       color: "var(--cse-green)",
       border: "1px solid var(--cse-green-border)",
     },
-    title: "Start with what they want",
-    subtitle: "Lead with the vision",
+    title: "Lead with the pull.",
+    subtitle: "Identity first. Product second.",
     description:
       "People aren't searching for a fix — they're drawn to an identity, aesthetic, or aspiration. Lead with the vision, then introduce the product as the vehicle.",
     question: '"What lifestyle or identity does this product unlock?"',
@@ -157,11 +157,10 @@ export function OrganizingPrincipleSelector({
             letterSpacing: "-.02em", lineHeight: 1.15, marginBottom: 12,
           }}
         >
-          Choose Your Creative Approach
+          Where does the spark start?
         </h1>
         <p style={{ fontSize: 15, color: "var(--ink-2)", lineHeight: 1.65, maxWidth: 560 }}>
-          Every product gets discovered one of two ways. Understanding which one
-          drives your category tells you where to start building messaging.
+          Every product gets found one of two ways. Get this right and everything downstream clicks.
         </p>
       </div>
 
@@ -202,10 +201,10 @@ export function OrganizingPrincipleSelector({
           <div style={{ fontSize: 20, flexShrink: 0 }}>✦</div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 2 }}>
-              AI Recommendation available
+              AI has a read on this.
             </div>
             <div style={{ fontSize: 12, color: "var(--ink-2)", lineHeight: 1.5 }}>
-              Claude can analyse your product description and suggest the best approach.
+              Apply the suggestion or override it.
             </div>
           </div>
           <button
@@ -376,7 +375,7 @@ export function OrganizingPrincipleSelector({
             boxShadow: "var(--shadow-xs)",
           }}
         >
-          {loading ? "Setting up…" : "Continue →"}
+          {loading ? "Setting up…" : "Lock it in →"}
         </button>
       </div>
     </div>
