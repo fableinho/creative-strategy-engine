@@ -22,10 +22,10 @@ interface ProjectCardProps {
 }
 
 const statusStyles: Record<string, { background: string; color: string; border: string }> = {
-  draft:     { background: "#e8e7e2", color: "#63635d", border: "transparent" },
-  active:    { background: "#f0fdf4", color: "#16a34a", border: "#bbf7d0" },
-  in_review: { background: "#fef3c7", color: "#d97706", border: "#fcd34d" },
-  approved:  { background: "#eff6ff", color: "#2563eb", border: "#bfdbfe" },
+  draft:     { background: "rgba(255,255,255,0.06)", color: "#94A3B8",  border: "rgba(255,255,255,0.08)" },
+  active:    { background: "rgba(74,222,128,0.10)",  color: "#4ADE80",  border: "rgba(74,222,128,0.2)" },
+  in_review: { background: "rgba(251,191,36,0.10)",  color: "#FBBF24",  border: "rgba(251,191,36,0.2)" },
+  approved:  { background: "rgba(139,92,246,0.12)",  color: "#A78BFA",  border: "rgba(139,92,246,0.25)" },
 };
 
 function SegmentedProgress({ currentStep }: { currentStep: number }) {
@@ -58,30 +58,26 @@ export function ProjectCard({
   updatedAt,
 }: ProjectCardProps) {
   const st = statusStyles[status] ?? statusStyles.draft;
-  const color = clientColor ?? "#a8a39a";
+  const color = clientColor ?? "rgba(139,92,246,0.6)";
 
   return (
     <div
-      className="project-card-accent"
+      className="project-card-accent glass"
       style={{
-        background: "white",
-        border: "1px solid var(--cse-border)",
         borderRadius: 16,
-        boxShadow: "var(--shadow-xs)",
         transition: "all .2s",
-        // CSS custom prop for the accent bar color
         ["--client-color" as string]: color,
       }}
       onMouseOver={e => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "var(--cse-border-2)";
-        el.style.boxShadow = "var(--shadow-md)";
+        el.style.borderColor = "rgba(139,92,246,0.35)";
+        el.style.boxShadow = "0 8px 32px rgba(124,58,237,0.15), 0 0 0 1px rgba(139,92,246,0.2)";
         el.style.transform = "translateY(-2px)";
       }}
       onMouseOut={e => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "var(--cse-border)";
-        el.style.boxShadow = "var(--shadow-xs)";
+        el.style.borderColor = "rgba(255,255,255,0.08)";
+        el.style.boxShadow = "none";
         el.style.transform = "none";
       }}
     >
@@ -122,7 +118,7 @@ export function ProjectCard({
         <div
           style={{
             display: "flex", alignItems: "center", justifyContent: "space-between",
-            paddingTop: 12, borderTop: "1px solid var(--surface-2)",
+            paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)",
           }}
         >
           <span style={{ fontSize: 12, color: "var(--ink-3)" }}>

@@ -16,53 +16,87 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen" style={{ background: "var(--surface)" }}>
-      <nav
+      {/* Fixed aurora orb background layer */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
+        <div
+          className="orb orb-violet"
+          style={{ width: 700, height: 700, top: -200, left: -250, animation: "float 14s ease-in-out infinite" }}
+        />
+        <div
+          className="orb orb-pink"
+          style={{ width: 500, height: 500, top: 150, right: -200, animation: "float 18s ease-in-out infinite 3s" }}
+        />
+        <div
+          className="orb orb-cyan"
+          style={{ width: 350, height: 350, bottom: -50, left: "35%", animation: "float 12s ease-in-out infinite 1.5s" }}
+        />
+        {/* Subtle grid overlay */}
+        <div
+          style={{
+            position: "absolute", inset: 0,
+            backgroundImage: "linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+      </div>
+
+      {/* Floating nav */}
+      <div
         style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-          height: 52,
-          background: "rgba(245,242,236,.90)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--cse-border)",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "0 24px",
+          position: "fixed", top: 12, left: "50%", transform: "translateX(-50%)",
+          zIndex: 100, width: "calc(100% - 48px)", maxWidth: 1280,
         }}
       >
-        <Link
-          href="/dashboard"
-          style={{ display: "flex", alignItems: "center", textDecoration: "none" }}
+        <nav
+          className="glass"
+          style={{
+            borderRadius: 16,
+            height: 52,
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            padding: "0 20px",
+          }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-hahmlet), serif",
-              fontWeight: 300,
-              fontSize: 22,
-              letterSpacing: "-0.04em",
-              color: "var(--ink)",
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-              lineHeight: 1,
-            }}
+          <Link
+            href="/dashboard"
+            style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}
           >
-            flnt
-            <svg width="6" height="18" viewBox="0 0 6 18" fill="none" aria-hidden="true">
-              <line x1="4.5" y1="1" x2="1.5" y2="17" stroke="#C8502A" strokeWidth="1.8" strokeLinecap="round"/>
-            </svg>
-          </span>
-        </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{ fontSize: 13, color: "var(--ink-2)" }}>{user.email}</span>
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              className="nav-signout-btn"
+            {/* Logo icon */}
+            <div
+              className="btn-neon"
+              style={{
+                width: 28, height: 28, borderRadius: 8,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+              }}
             >
-              Sign out
-            </button>
-          </form>
-        </div>
-      </nav>
-      <div style={{ paddingTop: 52 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <span
+              style={{
+                fontFamily: "var(--font-syne), sans-serif",
+                fontWeight: 700, fontSize: 18,
+                letterSpacing: "-0.02em", color: "var(--ink)", lineHeight: 1,
+              }}
+            >
+              flnt
+            </span>
+          </Link>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span style={{ fontSize: 12, color: "var(--ink-3)" }}>{user.email}</span>
+            <form action="/auth/signout" method="post">
+              <button type="submit" className="nav-signout-btn">
+                Sign out
+              </button>
+            </form>
+          </div>
+        </nav>
+      </div>
+
+      {/* Page content — above aurora layer */}
+      <div style={{ position: "relative", zIndex: 1, paddingTop: 76 }}>
         {children}
       </div>
     </div>

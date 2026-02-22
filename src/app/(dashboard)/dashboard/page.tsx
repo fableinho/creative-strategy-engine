@@ -95,7 +95,16 @@ export default async function DashboardPage() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 40 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 600, color: "var(--ink)", letterSpacing: "-.03em", lineHeight: 1.2 }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-syne), sans-serif",
+              fontSize: 30, fontWeight: 700,
+              letterSpacing: "-.03em", lineHeight: 1.2,
+              background: "linear-gradient(135deg, #E2E8F0 0%, #94A3B8 100%)",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             Projects
           </h1>
           <p style={{ fontSize: 14, color: "var(--ink-2)", marginTop: 4 }}>
@@ -104,14 +113,11 @@ export default async function DashboardPage() {
         </div>
         <NewProjectModal clients={clients}>
           <button
+            className="btn-neon"
             style={{
               display: "inline-flex", alignItems: "center", gap: 6,
-              background: "var(--ink)", color: "white",
-              padding: "9px 18px", borderRadius: 10,
-              fontSize: 14, fontWeight: 500,
-              border: "none", cursor: "pointer",
-              boxShadow: "var(--shadow-xs)",
-              fontFamily: "inherit",
+              color: "white", padding: "9px 18px", borderRadius: 10,
+              fontSize: 14, fontWeight: 500, fontFamily: "inherit",
             }}
           >
             + New Project
@@ -121,7 +127,12 @@ export default async function DashboardPage() {
 
       {clientGroups.length === 0 ? (
         <div style={{ textAlign: "center", padding: "80px 32px", color: "var(--ink-3)" }}>
-          <div style={{ fontSize: 40, marginBottom: 16, opacity: .5 }}>📋</div>
+          <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.35 }}>
+              <rect x="3" y="3" width="18" height="18" rx="3" />
+              <path d="M8 10h8M8 14h5" />
+            </svg>
+          </div>
           <div style={{ fontSize: 16, fontWeight: 500, color: "var(--ink-2)", marginBottom: 6 }}>No projects yet</div>
           <div style={{ fontSize: 13, lineHeight: 1.6, maxWidth: 320, margin: "0 auto" }}>
             Create your first project to get started with creative strategy.

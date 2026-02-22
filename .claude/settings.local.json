@@ -8,7 +8,12 @@
       "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" show e0b2786 --name-only)",
       "Bash(find:*)",
       "Bash(ls:*)",
-      "Bash(npx claude-code-templates@latest:*)"
+      "Bash(npx claude-code-templates@latest:*)",
+      "Bash(npx playbooks add skill:*)",
+      "Bash(python3:*)",
+      "Bash(py:*)",
+      "Bash(PYTHONIOENCODING=utf-8 py:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

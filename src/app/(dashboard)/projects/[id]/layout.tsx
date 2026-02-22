@@ -38,7 +38,7 @@ export default async function ProjectLayout({
   const clientName: string = project.clients?.name ?? "";
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)]">
+    <div style={{ display: "flex", height: "calc(100vh - 76px)" }}>
       <WizardSidebar
         projectId={project.id}
         projectName={project.name}

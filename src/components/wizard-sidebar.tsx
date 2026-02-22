@@ -70,18 +70,20 @@ export function WizardSidebar({
     persistStep(activeIndex);
   }, [pathname, basePath, persistStep]);
 
-  const color = clientName ? clientColor(clientName) : "#a8a39a";
+  const color = clientName ? clientColor(clientName) : "#7C3AED";
   const initials = clientName ? clientInitials(clientName) : "";
 
   return (
     <aside
       style={{
         width: 220, flexShrink: 0,
-        background: "white",
-        borderRight: "1px solid var(--cse-border)",
+        background: "rgba(255,255,255,0.03)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        borderRight: "1px solid rgba(255,255,255,0.08)",
         padding: "24px 0",
-        position: "sticky", top: 52,
-        height: "calc(100vh - 52px)",
+        position: "sticky", top: 76,
+        height: "calc(100vh - 76px)",
         overflowY: "auto",
         display: "flex", flexDirection: "column",
       }}
@@ -90,7 +92,7 @@ export function WizardSidebar({
       <div
         style={{
           padding: "0 20px 20px",
-          borderBottom: "1px solid var(--cse-border)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
           marginBottom: 16,
         }}
       >
@@ -147,13 +149,13 @@ export function WizardSidebar({
                 display: "flex", alignItems: "center", gap: 10,
                 padding: "9px 10px", borderRadius: 10,
                 marginBottom: 2,
-                border: isActive ? "1px solid var(--cse-border)" : "1px solid transparent",
-                background: isActive ? "var(--surface-2)" : "none",
+                border: isActive ? "1px solid rgba(139,92,246,0.3)" : "1px solid transparent",
+                background: isActive ? "rgba(139,92,246,0.1)" : "none",
                 textDecoration: "none",
                 transition: "all .15s",
               }}
               onMouseOver={e => {
-                if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "var(--surface)";
+                if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
               }}
               onMouseOut={e => {
                 if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "none";
@@ -166,8 +168,14 @@ export function WizardSidebar({
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: isCompleted && !isActive ? 10 : 11,
                   fontWeight: 600, flexShrink: 0,
-                  background: isActive || isCompleted ? "var(--ink)" : "white",
-                  border: isActive || isCompleted ? "1.5px solid var(--ink)" : "1.5px solid var(--cse-border)",
+                  background: isActive
+                    ? "linear-gradient(135deg, #7C3AED, #EC4899)"
+                    : isCompleted
+                    ? "#8B5CF6"
+                    : "rgba(255,255,255,0.06)",
+                  border: isActive || isCompleted
+                    ? "1.5px solid transparent"
+                    : "1.5px solid rgba(255,255,255,0.12)",
                   color: isActive || isCompleted ? "white" : "var(--ink-3)",
                 }}
               >
@@ -204,7 +212,7 @@ export function WizardSidebar({
       <div
         style={{
           padding: "12px 16px",
-          borderTop: "1px solid var(--cse-border)",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
       >
         <ExportBriefModal projectId={projectId} />
