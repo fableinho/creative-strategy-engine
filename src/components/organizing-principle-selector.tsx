@@ -21,7 +21,7 @@ interface OrganizingPrincipleSelectorProps {
 const PRINCIPLES = [
   {
     key: "pain" as const,
-    badge: "Pain-First",
+    badge: "😣 Pain-First",
     badgeStyle: {
       background: "var(--cse-red-bg)",
       color: "var(--cse-red)",
@@ -37,12 +37,12 @@ const PRINCIPLES = [
       '"Stop losing customers to slow load times"',
       '"The hidden cost of outdated software"',
     ],
-    glowColor: "rgba(248,113,113,0.08)",
+    glowColor: "rgba(220,38,38,.06)",
     selectedClass: "selected-pain",
   },
   {
     key: "desire" as const,
-    badge: "Desire-First",
+    badge: "🌟 Desire-First",
     badgeStyle: {
       background: "var(--cse-green-bg)",
       color: "var(--cse-green)",
@@ -58,7 +58,7 @@ const PRINCIPLES = [
       '"What if your team could ship every week?"',
       '"The fastest path to 10K subscribers"',
     ],
-    glowColor: "rgba(74,222,128,0.08)",
+    glowColor: "rgba(22,163,74,.06)",
     selectedClass: "selected-desire",
   },
 ] as const;
@@ -135,6 +135,9 @@ export function OrganizingPrincipleSelector({
       .eq("id", projectId);
 
     if (!error) {
+      // Sync store immediately so Step 2 reads the correct approach
+      // without waiting for a re-hydrate (the hydrate guard skips re-fetching
+      // when the same project is already marked as hydrated).
       setOrganizingApproach(selected);
       router.push(`/projects/${projectId}/pain-desires`);
     }
@@ -155,7 +158,7 @@ export function OrganizingPrincipleSelector({
         </div>
         <h1
           style={{
-            fontFamily: "var(--font-syne), sans-serif",
+            fontFamily: "var(--font-hahmlet), serif",
             fontSize: 38, color: "var(--ink)",
             letterSpacing: "-.02em", lineHeight: 1.15, marginBottom: 12,
           }}
@@ -172,12 +175,12 @@ export function OrganizingPrincipleSelector({
         <div
           style={{
             display: "flex", alignItems: "center", gap: 12,
-            background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.2)",
+            background: "var(--surface-2)", border: "1px solid var(--cse-border)",
             borderRadius: 16, padding: "14px 18px",
             marginBottom: 32,
           }}
         >
-          <div style={{ fontSize: 18, flexShrink: 0, color: "#A78BFA" }}>✦</div>
+          <div style={{ fontSize: 20, flexShrink: 0 }}>✦</div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 2 }}>
               AI Recommendation — {Math.round(aiRecommendation.confidence * 100)}% confidence
@@ -196,12 +199,12 @@ export function OrganizingPrincipleSelector({
         <div
           style={{
             display: "flex", alignItems: "center", gap: 12,
-            background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.2)",
+            background: "var(--surface-2)", border: "1px solid var(--cse-border)",
             borderRadius: 16, padding: "14px 18px",
             marginBottom: 32,
           }}
         >
-          <div style={{ fontSize: 18, flexShrink: 0, color: "#A78BFA" }}>✦</div>
+          <div style={{ fontSize: 20, flexShrink: 0 }}>✦</div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 2 }}>
               AI has a read on this.
@@ -215,9 +218,9 @@ export function OrganizingPrincipleSelector({
             disabled={aiLoading}
             style={{
               flexShrink: 0,
-              background: "rgba(255,255,255,0.08)", color: "var(--ink)",
+              background: "white", color: "var(--ink)",
               padding: "8px 16px", borderRadius: 10,
-              fontSize: 13, fontWeight: 500, border: "1px solid rgba(255,255,255,0.12)",
+              fontSize: 13, fontWeight: 500, border: "1px solid var(--cse-border)",
               cursor: aiLoading ? "not-allowed" : "pointer",
               boxShadow: "var(--shadow-xs)", fontFamily: "inherit",
               opacity: aiLoading ? 0.6 : 1,
@@ -242,37 +245,29 @@ export function OrganizingPrincipleSelector({
           return (
             <div
               key={p.key}
-              className="choice-card-glow glass"
+              className="choice-card-glow"
               onClick={() => setSelected(p.key)}
               style={{
-                border: isSelected
-                  ? "2px solid rgba(139,92,246,0.5)"
-                  : "2px solid rgba(255,255,255,0.08)",
+                background: "white",
+                border: `2px solid ${isSelected ? "var(--ink)" : "var(--cse-border)"}`,
                 borderRadius: 24, padding: 28,
                 cursor: "pointer",
                 transition: "all .2s",
                 position: "relative", overflow: "hidden",
-                background: isSelected
-                  ? "rgba(139,92,246,0.08)"
-                  : "rgba(255,255,255,0.04)",
-                boxShadow: isSelected
-                  ? "0 8px 32px rgba(124,58,237,0.15), 0 0 0 1px rgba(139,92,246,0.15)"
-                  : "none",
+                boxShadow: isSelected ? "var(--shadow-md)" : "none",
                 ["--glow-color" as string]: p.glowColor,
               } as React.CSSProperties}
               onMouseOver={e => {
                 const el = e.currentTarget as HTMLDivElement;
-                if (!isSelected) {
-                  el.style.borderColor = "rgba(139,92,246,0.3)";
-                  el.style.background = "rgba(139,92,246,0.05)";
-                }
+                if (!isSelected) el.style.borderColor = "var(--cse-border-2)";
                 el.style.transform = "translateY(-2px)";
+                el.style.boxShadow = "var(--shadow-md)";
               }}
               onMouseOut={e => {
                 const el = e.currentTarget as HTMLDivElement;
-                el.style.borderColor = isSelected ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.08)";
-                el.style.background = isSelected ? "rgba(139,92,246,0.08)" : "rgba(255,255,255,0.04)";
+                el.style.borderColor = isSelected ? "var(--ink)" : "var(--cse-border)";
                 el.style.transform = "none";
+                el.style.boxShadow = isSelected ? "var(--shadow-md)" : "none";
               }}
             >
               {/* Animated checkmark */}
@@ -280,7 +275,7 @@ export function OrganizingPrincipleSelector({
                 style={{
                   position: "absolute", top: 20, right: 20,
                   width: 22, height: 22, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #7C3AED, #EC4899)",
+                  background: "var(--ink)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   color: "white", fontSize: 12,
                   opacity: isSelected ? 1 : 0,
@@ -328,8 +323,8 @@ export function OrganizingPrincipleSelector({
                 style={{
                   fontSize: 12, fontWeight: 600, color: "var(--ink)",
                   fontStyle: "italic", padding: "10px 14px",
-                  background: "rgba(255,255,255,0.04)", borderRadius: 8,
-                  borderLeft: "3px solid rgba(139,92,246,0.4)",
+                  background: "var(--surface)", borderRadius: 8,
+                  borderLeft: "3px solid var(--cse-border-2)",
                   marginBottom: 16,
                 }}
               >
@@ -352,8 +347,7 @@ export function OrganizingPrincipleSelector({
                     style={{
                       fontSize: 12, color: "var(--ink-2)", fontStyle: "italic",
                       padding: "6px 10px", borderRadius: 6,
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      background: "var(--surface)", border: "1px solid var(--cse-border)",
                       lineHeight: 1.4,
                     }}
                   >
@@ -370,20 +364,21 @@ export function OrganizingPrincipleSelector({
       <div
         style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.08)",
+          paddingTop: 24, borderTop: "1px solid var(--cse-border)",
         }}
       >
         <div />
         <button
-          className="btn-neon"
           onClick={handleContinue}
           disabled={!selected || loading}
           style={{
-            color: "white",
-            padding: "9px 20px", borderRadius: 10,
-            fontSize: 14, fontWeight: 500,
+            background: "var(--ink)", color: "white",
+            padding: "9px 18px", borderRadius: 10,
+            fontSize: 14, fontWeight: 500, border: "none",
+            cursor: selected && !loading ? "pointer" : "not-allowed",
             opacity: selected && !loading ? 1 : 0.4,
             fontFamily: "inherit",
+            boxShadow: "var(--shadow-xs)",
           }}
         >
           {loading ? "Setting up…" : "Lock it in →"}

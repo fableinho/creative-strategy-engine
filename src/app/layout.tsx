@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Syne, Manrope } from "next/font/google";
+import { DM_Mono, Hahmlet } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const hahmlet = Hahmlet({
+  variable: "--font-hahmlet",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${syne.variable} ${manrope.variable} antialiased`}>
+      <body className={`${dmMono.variable} ${hahmlet.variable} antialiased`}>
         {children}
         <Analytics />
       </body>
