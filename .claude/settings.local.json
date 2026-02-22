@@ -7,7 +7,8 @@
       "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" log --oneline --all)",
       "Bash(git -C \"C:\\\\Users\\\\Anwender\\\\creative-strategy-engine\" show e0b2786 --name-only)",
       "Bash(find:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx claude-code-templates@latest:*)"
     ]
   }
 }
